@@ -40,4 +40,26 @@ class AttractionModel {
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
+
+    public function addAttraction($nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id) {
+        $stmt = $this->db->prepare("
+            INSERT INTO attractions (nom, image, description, gag, caracteristiques, taille_minimale, statut, univers_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id]);
+    }
+
+    public function updateAttraction($id, $nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id) {
+        $stmt = $this->db->prepare("
+            UPDATE attractions 
+            SET nom = ?, image = ?, description = ?, gag = ?, caracteristiques = ?, taille_minimale = ?, statut = ?, univers_id = ? 
+            WHERE id = ?
+        ");
+        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id, $id]);
+    }
+
+    public function deleteAttraction($id) {
+        $stmt = $this->db->prepare("DELETE FROM attractions WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 }

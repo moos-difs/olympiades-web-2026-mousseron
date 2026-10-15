@@ -28,4 +28,9 @@ class AttractionController {
         header("HTTP/1.0 404 Not Found");
         require_once 'views/error.php';
     }
+
+    public function ajouter() {
+        $this->model->ajouter();
+        require_once 'views/attractions.php';
+    }
 }

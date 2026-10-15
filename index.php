@@ -29,6 +29,15 @@ break;
 case 'logout':
 $authController->deconnecter();
 break;
+case 'admin_create':
+$attractionController->ajouter();
+break;
+case 'admin_edit':
+$attractionController->modifier($id);
+break;
+case 'admin_delete':
+$attractionController->supprimer($id);
+break;
 default:
 $attractionController->erreur("La page demandée n'existe pas !");
 break;
