@@ -68,6 +68,12 @@ if (session_status() === PHP_SESSION_NONE) {
             <span class="entete__nav-num">05</span>Réservations
         </a>
 
+        <?php if (isset($_SESSION["user_id"]) && $_SESSION['user_role'] === 'admin'): ?>
+            <a href="index.php?action=admin_controle">
+                Controle tickets
+            </a>
+        <?php endif; ?>
+
         <?php if (isset($_SESSION['user_id'])): ?>
             <!-- Affiché si connecté -->
             <span style="background: var(--violet); color: #fff; padding: 0.4rem 0.8rem; border: 3px solid var(--noir); font-size: 0.85rem; display: flex; align-items: center;">

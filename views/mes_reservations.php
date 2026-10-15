@@ -23,7 +23,7 @@ ob_start();
         </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p class="vide">Vous n'avez encore effectué aucune réservation pour le moment ! <a href="index.php?action=billetterie" style="color: var(--rose); text-decoration: underline wavy;">Réservez dès maintenant</a></p>
+        <p class="vide">Vous n'avez encore effectué aucune réservation pour le moment ! <a href="index.php?action=billetterie" style="color: var(--rose);">Réservez dès maintenant !</a></p>
     <?php endif; ?>
 </div>
 

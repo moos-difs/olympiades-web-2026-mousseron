@@ -3,12 +3,14 @@ require_once __DIR__ . '/../models/BilletterieModel.php';
 
 class BilletterieController {
     private $model;
+    private $db;
 
     public function __construct() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         $this->model = new BilletterieModel();
+        $this->db = Database::getConnection();
     }
 
     private function checkAuth() {
@@ -157,13 +159,12 @@ class BilletterieController {
 
     // --- NOUVEAU : Afficher le rendu du mail de confirmation pour une commande (Admin) ---
     public function adminVoirMail($reservation_id) {
-        // 1. Vérification des droits Admin
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             header('Location: index.php?action=login');
             exit();
         }
 
-        // 2. Récupérer les infos de la réservation et du client
+        // 1. Récupération des détails de la réservation
         $stmt = $this->db->prepare("
             SELECT r.*, u.nom AS client_nom, u.email AS client_email 
             FROM reservations r 
@@ -181,33 +182,65 @@ class BilletterieController {
         $date_visite = $reservation['date_visite'];
         $prix_total = $reservation['prix_total'];
 
-        // 3. Récupérer les lignes de billets associés à la commande
-        $stmtBillets = $this->db->prepare("
-            SELECT rb.*, t.libelle 
-            FROM reservation_billets rb 
-            JOIN tarifs t ON rb.tarif_id = t.id 
-            WHERE rb.reservation_id = ?
-        ");
-        $stmtBillets->execute([$reservation_id]);
-        $lignes = $stmtBillets->fetchAll();
+        // 2. Récupération des e-billets réellement enregistrés en BDD avec leurs vrais codes uniques
+        $e_billets_db = $this->model->getEBilletsByReservation($reservation_id);
 
-        // 4. Préparer le tableau des e-billets unitaires avec un code unique imprévisible par billet
         $e_billets = [];
-        $numero = 1;
-        foreach ($lignes as $ligne) {
-            for ($i = 0; $i < $ligne['quantite']; $i++) {
-                $e_billets[] = [
-                    'libelle' => $ligne['libelle'],
-                    'numero_billet' => $reservation_id . '-' . $numero,
-                    // Génération d'un code unique imprévisible pour chaque billet
-                    'code_unique' => strtoupper(bin2hex(random_bytes(4))) 
-                ];
-                $numero++;
-            }
+        $index = 1;
+        foreach ($e_billets_db as $eb) {
+            $e_billets[] = [
+                'libelle' => $eb['libelle'],
+                'numero_billet' => $reservation_id . '-' . $index,
+                'code_unique' => $eb['code_unique'] // Le VRAI code stocké en BDD !
+            ];
+            $index++;
         }
 
-        // 5. Inclure directement le template HTML du mail pour l'afficher à l'écran
-        require_once 'views/email_confirmation.php';
+        // 3. Affichage du rendu HTML du mail
+        require_once 'mails/email_confirmation.php';
         exit();
+    }
+
+    // Afficher la page de contrôle de billet (Admin)
+    public function afficherControleBillet() {
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?action=login');
+            exit();
+        }
+        require_once 'views/admin_controle_billet.php';
+    }
+
+    // Traiter la vérification du code unique du billet
+    public function verifierBillet() {
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $code = trim($_POST['code_unique'] ?? '');
+            $billet = $this->model->getBilletByCode($code);
+            $today = date('Y-m-d');
+
+            if (!$billet) {
+                $message_resultat = "❌ ERREUR : Ce code unique n'existe pas dans la base de données.";
+                $statut_classe = "erreur";
+            } elseif ($billet['est_utilise'] == 1) {
+                $message_resultat = "⚠️ ATTENTION : Ce billet a DÉJÀ ÉTÉ UTILISÉ le " . date('d/m/Y à H:i', strtotime($billet['date_utilisation'])) . " !";
+                $statut_classe = "avertissement";
+            } elseif ($billet['date_visite'] !== $today) {
+                $date_formatee = date('d/m/Y', strtotime($billet['date_visite']));
+                $message_resultat = "❌ BILLET INVALIDE POUR AUJOURD'HUI : Ce billet est prévu pour le **$date_formatee** (Aujourd'hui nous sommes le " . date('d/m/Y') . ").";
+                $statut_classe = "erreur";
+            } else {
+                // Tout est valide ! On valide le billet en base (passage à est_utilise = 1)
+                $this->model->validerBilletParCode($billet['id']);
+                $message_resultat = "✅ VALIDÉ ! Entrée autorisée pour " . htmlspecialchars($billet['client_nom']) . " (" . htmlspecialchars($billet['tarif_libelle']) . ").";
+                $statut_classe = "succes";
+            }
+
+            require_once 'views/admin_controle_billet.php';
+            exit();
+        }
     }
 }
