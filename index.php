@@ -10,35 +10,53 @@ $attractionController = new AttractionController();
 $authController = new AuthController();
 
 switch ($action) {
-case 'accueil':
-$homeController->index();
-break;
-case 'attractions':
-$attractionController->lister();
-break;
-case 'detail':
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$attractionController->detail($id);
-break;
-case 'login':
-$authController->afficherConnexion();
-break;
-case 'login_post':
-$authController->connecter();
-break;
-case 'logout':
-$authController->deconnecter();
-break;
-case 'admin_create':
-$attractionController->ajouter();
-break;
-case 'admin_edit':
-$attractionController->modifier($id);
-break;
-case 'admin_delete':
-$attractionController->supprimer($id);
-break;
-default:
-$attractionController->erreur("La page demandée n'existe pas !");
-break;
+    // Pages publiques
+    case 'accueil':
+        $homeController->index();
+        break;
+    case 'attractions':
+        $attractionController->lister();
+        break;
+    case 'detail':
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $attractionController->detail($id);
+        break;
+
+    // Authentification
+    case 'login':
+        $authController->afficherConnexion();
+        break;
+    case 'login_post':
+        $authController->connecter();
+        break;
+    case 'logout':
+        $authController->deconnecter();
+        break;
+
+    // --- CRUD ADMIN ---
+    case 'admin_attractions':
+        $attractionController->adminLister();
+        break;
+    case 'admin_create':
+        $attractionController->adminCreerForm();
+        break;
+    case 'admin_create_post':
+        $attractionController->adminCreerTraitement();
+        break;
+    case 'admin_edit':
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $attractionController->adminModifierForm($id);
+        break;
+    case 'admin_update_post':
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $attractionController->adminModifierTraitement($id);
+        break;
+    case 'admin_delete':
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $attractionController->adminSupprimer($id);
+        break;
+
+    default:
+        $attractionController->erreur("La page demandée n'existe pas dans cette dimension !");
+        break;
 }

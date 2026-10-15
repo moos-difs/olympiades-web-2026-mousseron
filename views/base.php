@@ -40,7 +40,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <a href="index.php?action=accueil">
             <span class="entete__nav-num">01</span> Accueil
         </a>
-        <a href="index.php?action=attractions">
+        <?php if (isset($_SESSION['user_id']) && $_SESSION['user_role'] === "admin"): ?>
+            <a href="index.php?action=admin_attractions">
+        <?php else : ?>
+            <a href="index.php?action=attractions">
+        <?php endif; ?>
             <span class="entete__nav-num">02</span> Attractions
         </a>
 

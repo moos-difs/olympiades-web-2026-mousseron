@@ -41,21 +41,21 @@ class AttractionModel {
         return $stmt->fetch();
     }
 
-    public function addAttraction($nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id) {
+    public function addAttraction($nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id) {
         $stmt = $this->db->prepare("
-            INSERT INTO attractions (nom, image, description, gag, caracteristiques, taille_minimale, statut, univers_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO attractions (nom, image, description, gag, caracteristiques, taille_minimale, statut, univers_id, attente) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id]);
+        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id, $attente]);
     }
 
-    public function updateAttraction($id, $nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id) {
+    public function updateAttraction($id, $nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id) {
         $stmt = $this->db->prepare("
             UPDATE attractions 
-            SET nom = ?, image = ?, description = ?, gag = ?, caracteristiques = ?, taille_minimale = ?, statut = ?, univers_id = ? 
+            SET nom = ?, image = ?, description = ?, gag = ?, caracteristiques = ?, attente = ?, taille_minimale = ?, statut = ?, univers_id = ?
             WHERE id = ?
         ");
-        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $taille_minimale, $statut, $univers_id, $id]);
+        return $stmt->execute([$nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id, $id]);
     }
 
     public function deleteAttraction($id) {

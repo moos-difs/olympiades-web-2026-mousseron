@@ -37,6 +37,10 @@ ob_start();
                     <?= htmlspecialchars($attraction['statut']) ?>
                 </span>
                 </li>
+                <li>
+                    <strong>Temps d'attente :</strong>
+                    <?= htmlspecialchars($attraction['attente']) ?>
+                </li>
             </ul>
         </div>
     </div>
