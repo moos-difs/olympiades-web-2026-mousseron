@@ -21,6 +21,8 @@ ob_start();
             </div>
             <button type="submit" class="bouton" style="background: var(--vert); color: var(--noir); cursor: pointer; border: 3px solid var(--noir); box-shadow: 4px 4px 0 var(--noir);">Se connecter →</button>
         </form>
+
+        <p class="page-entete__intro">Pas de compte ?<a href="index.php?action=create_account" style="color: var(--rose)"> Créez en un !</a></p>
     </div>
 <?php
 $content = ob_get_clean();

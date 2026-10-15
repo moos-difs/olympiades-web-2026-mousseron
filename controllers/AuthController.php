@@ -41,4 +41,28 @@ class AuthController {
         header('Location: index.php?action=accueil');
         exit();
     }
+
+    public function creerCompteForm() {
+        require_once 'views/user_form_compte.php';
+    }
+
+    public function creerCompteTraitement() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = trim($_POST['nom']);
+            $email = (int)$_POST['email'];
+            $password = trim($_POST['password']);
+
+            $existe = $this->model->getUserByEmail($email);
+            if ($existe) {
+                $erreur = "Cet email est déja utilisé par un autre compte.";
+                require_once 'views/user_form_compte.php';
+                return;
+            }
+
+            $this->model->newUser($nom, $email, $password);
+            
+            require_once 'views/register_success.php';
+            exit();
+        }
+    }
 }

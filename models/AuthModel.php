@@ -13,4 +13,13 @@ class AuthModel {
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
+
+    public function newUser($nom, $email, $password) {
+        $hashed_password = password_hash($password, PASSWORD_ARGON2ID);
+        $stmt = $this->db->prepare("
+            INSERT INTO utilisateurs (nom, email, mot_de_passe) 
+            VALUES (?, ?, ?)
+        ");
+        $stmt->execute([$nom, $email, $hashed_password]);
+    }
 }

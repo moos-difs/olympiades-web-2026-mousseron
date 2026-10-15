@@ -56,6 +56,13 @@ switch ($action) {
         $attractionController->adminSupprimer($id);
         break;
 
+    case 'create_account':
+        $authController->creerCompteForm();
+        break;
+
+    case 'create_account_post':
+        $authController->creerCompteTraitement();
+
     default:
         $attractionController->erreur("La page demandée n'existe pas dans cette dimension !");
         break;

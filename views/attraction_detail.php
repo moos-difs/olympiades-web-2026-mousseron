@@ -27,19 +27,20 @@ ob_start();
         </div>
 
         <div class="fiche__bloc">
-            <h2>Caractéristiques techniques & Infos</h2>
+            <h2>Caractéristiques techniques</h2>
+            <p style="font-weight: 500; font-size: 1.05rem;"><?= htmlspecialchars($attraction['caracteristiques']) ?></p>
+        </div>
+
+        <div class="fiche__bloc">
+            <h2>Informations pratiques</h2>
             <ul class="liste-competences">
-                <li><strong>Détails :</strong> <?= htmlspecialchars($attraction['caracteristiques']) ?></li>
+                <li><strong>Temps d'attente estimé :</strong> <?= htmlspecialchars($attraction['attente']) ?></li>
                 <li><strong>Taille minimale requise :</strong> <?= htmlspecialchars($attraction['taille_minimale']) ?> cm</li>
                 <li>
-                    <strong>Statut actuel :</strong>
+                    <strong>Statut actuel :</strong> 
                     <span style="color: <?= $attraction['statut'] == 'Ouvert' ? 'var(--noir)' : 'var(--rose)' ?>;">
-                    <?= htmlspecialchars($attraction['statut']) ?>
-                </span>
-                </li>
-                <li>
-                    <strong>Temps d'attente :</strong>
-                    <?= htmlspecialchars($attraction['attente']) ?>
+                        <?= htmlspecialchars($attraction['statut']) ?>
+                    </span>
                 </li>
             </ul>
         </div>
