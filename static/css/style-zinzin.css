@@ -491,37 +491,64 @@ a {
 }
 
 
-/* --- Personnalisation des inputs nombre / flèches de la billetterie --- */
-
-/* Assure un affichage propre de l'input */
-.input-quantite {
-    background: var(--vert);
-    color: var(--noir);
-    font-family: var(--police-texte);
-    font-weight: 800;
-    font-size: 1.1rem;
-    padding: 0.5rem;
-    border: 3px solid var(--noir);
-    outline: none;
-    transition: background 0.15s ease;
+/* --- Animation Cartoon du Logo Studio Toon --- */
+.cartoon-logo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: logoBounce 1.8s ease-in-out infinite alternate;
+    transform-origin: center;
 }
 
-.input-quantite:focus {
-    background: var(--cyan);
+/* Effet de rebond cartoon */
+@keyframes logoBounce {
+    0% {
+        transform: translateY(0) rotate(-2deg) scale(1);
+    }
+    50% {
+        transform: translateY(-4px) rotate(1deg) scale(1.02);
+    }
+    100% {
+        transform: translateY(0) rotate(-2deg) scale(1);
+    }
 }
 
-/* --- Pour les navigateurs basés sur WebKit (Chrome, Safari, Edge) --- */
-.input-quantite::-webkit-inner-spin-button,
-.input-quantite::-webkit-outer-spin-button {
-    opacity: 1; /* Force l'affichage des flèches */
-    background: var(--noir);
-    border-left: 2px solid var(--noir);
-    cursor: pointer;
-    width: 24px;
-    height: 100%;
+/* Le petit texte change légèrement de couleur/vibre à l'œil */
+.logo-texte {
+    font-family: var(--police-titre);
+    letter-spacing: -0.01em;
+    text-shadow: 3px 3px 0 var(--noir);
+    display: inline-block;
 }
 
-/* --- Pour Firefox --- */
-.input-quantite {
-    -moz-appearance: textfield; /* Cache les flèches natives pour un meilleur contrôle si besoin, ou laisse-les par défaut */
+/* Animation du petit nuage de cartoon derrière ou à côté */
+.logo-nuage {
+    position: absolute;
+    top: -12px;
+    left: -15px;
+    font-size: 1.2rem;
+    animation: nuageFlotte 2.5s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes nuageFlotte {
+    0% {
+        transform: translate(0, 0) scale(0.9) rotate(-10deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(6px, -4px) scale(1.1) rotate(10deg);
+        opacity: 1;
+    }
+}
+
+/* Effet au survol de la souris : gros boost cartoon ! */
+.cartoon-logo:hover {
+    animation: logoFastBounce 0.4s ease infinite alternate;
+}
+
+@keyframes logoFastBounce {
+    0% { transform: translateY(-3px) rotate(-3deg) scale(1.05); }
+    100% { transform: translateY(3px) rotate(3deg) scale(1.08); }
 }

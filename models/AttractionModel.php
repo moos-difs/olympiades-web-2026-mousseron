@@ -62,4 +62,9 @@ class AttractionModel {
         $stmt = $this->db->prepare("DELETE FROM attractions WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function getTempsAttenteLive() {
+        $stmt = $this->db->query("SELECT id, nom, attente, statut FROM attractions");
+        return $stmt->fetchAll();
+    }
 }

@@ -85,6 +85,14 @@ switch ($action) {
         $billetterieController->adminReservations();
         break;
 
+    case 'live':
+        $attractionController->pageLive();
+        break;
+
+    case 'api_live':
+        $attractionController->apiLive();
+        break;
+
     default:
         $attractionController->erreur("La page demandée n'existe pas dans cette dimension !");
         break;

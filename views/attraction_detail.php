@@ -34,7 +34,7 @@ ob_start();
         <div class="fiche__bloc">
             <h2>Informations pratiques</h2>
             <ul class="liste-competences">
-                <li><strong>Temps d'attente estimé :</strong> <?= htmlspecialchars($attraction['attente']) ?></li>
+                <li><strong>Temps d'attente estimé :</strong> <?= htmlspecialchars($attraction['attente']) ?> min</li>
                 <li><strong>Taille minimale requise :</strong> <?= htmlspecialchars($attraction['taille_minimale']) ?> cm</li>
                 <li>
                     <strong>Statut actuel :</strong> 

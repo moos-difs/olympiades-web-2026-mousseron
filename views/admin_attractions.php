@@ -41,7 +41,9 @@ ob_start();
                                 <?= htmlspecialchars($a['statut']) ?>
                             </span>
                         </td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir);"><?= htmlspecialchars($a['attente']) ?></td>
+                        <td style="padding: 0.8rem; border: 2px solid var(--noir); font-weight: bold; color: var(--violet);">
+                            <?= htmlspecialchars($a['attente']) ?> min
+                        </td>                        
                         <td style="padding: 0.8rem; border: 2px solid var(--noir); text-align: center;">
                             <div style="display: flex; gap: 0.5rem; justify-content: center;">
                                 <!-- Bouton Modifier -->

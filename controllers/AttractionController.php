@@ -120,4 +120,20 @@ class AttractionController {
         header('Location: index.php?action=admin_attractions');
         exit();
     }
+
+    // Afficher la page en direct des temps d'attente
+    public function pageLive() {
+        require_once 'views/attractions_live.php';
+    }
+
+    // API JSON pour récupérer les temps en live (appelée par JavaScript)
+    public function apiLive() {
+        header('Content-Type: application/json');
+        $attractions = $this->model->getTempsAttenteLive();
+        echo json_encode([
+            'derniere_maj' => date('H:i:s'),
+            'attractions' => $attractions
+        ]);
+        exit();
+    }
 }
