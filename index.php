@@ -39,7 +39,7 @@ switch ($action) {
     case 'admin_attractions':
         $attractionController->adminLister();
         break;
-        
+
     case 'admin_create':
         $attractionController->adminCreerForm();
         break;
@@ -113,6 +113,22 @@ switch ($action) {
 
     case 'admin_verifier_billet':
         $billetterieController->verifierBillet();
+        break;
+
+    case 'reset_pass':
+        $authController->afficherFormulaireMdpOublie();
+        break;
+
+    case 'traiter_mdp_oublie':
+        $authController->traiterMdpOublie();
+        break;
+
+    case 'reset_password':
+        $authController->afficherFormulaireNouveauMotDePasse();
+        break;
+
+    case 'traiter_reset_password':
+        $authController->traiterNouveauMotDePasse();
         break;
 
     default:

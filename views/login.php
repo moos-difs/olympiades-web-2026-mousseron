@@ -18,6 +18,7 @@ ob_start();
             <div>
                 <label style="display: block; font-weight: 700; margin-bottom: 0.3rem;">Mot de passe :</label>
                 <input type="password" name="password" required style="width: 100%; padding: 0.7rem; border: 3px solid var(--noir); font-family: var(--police-texte);">
+                <p class="page-entete__intro">Trou de mémoire ?<a href="index.php?action=reset_pass" style="color: var(--rose)"> Mot de passe oublié</a></p>
             </div>
             <button type="submit" class="bouton" style="background: var(--vert); color: var(--noir); cursor: pointer; border: 3px solid var(--noir); box-shadow: 4px 4px 0 var(--noir);">Se connecter →</button>
         </form>

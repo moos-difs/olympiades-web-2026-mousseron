@@ -12,8 +12,9 @@ ob_start();
             Univers : <span style="color: var(--rose);"><?= htmlspecialchars($attraction['univers_nom']) ?></span>
         </div>
 
-        <div style="margin-bottom: 2rem;">
-            <img src="static/images/<?= htmlspecialchars($attraction['image']) ?>" alt="<?= htmlspecialchars($attraction['nom']) ?>" class="preuve__image" style="width: 100%; max-height: 400px; object-fit: cover;">
+        <!-- Cadre néo-brutaliste enveloppant l'image en entier -->
+        <div style="background: var(--cyan); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 1.5rem; margin-bottom: 2.5rem; text-align: center;">
+            <img src="static/images/<?= htmlspecialchars($attraction['image']) ?>" alt="<?= htmlspecialchars($attraction['nom']) ?>" style="width: 100%; height: auto; max-height: 550px; object-fit: contain; display: block; margin: 0 auto; border: 3px solid var(--noir); background: #fff;">
         </div>
 
         <div class="fiche__bloc">
