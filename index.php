@@ -2,12 +2,14 @@
 require_once 'controllers/HomeController.php';
 require_once 'controllers/AttractionController.php';
 require_once 'controllers/AuthController.php';
+require_once 'controllers/BilletterieController.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'accueil';
 
 $homeController = new HomeController();
 $attractionController = new AttractionController();
 $authController = new AuthController();
+$billetterieController = new BilletterieController();
 
 switch ($action) {
     // Pages publiques
@@ -62,6 +64,26 @@ switch ($action) {
 
     case 'create_account_post':
         $authController->creerCompteTraitement();
+
+    case 'billetterie':
+        $billetterieController->afficherFormulaire();
+        break;
+    case 'billetterie_post':
+        $billetterieController->preparerPaiement();
+        break;
+    case 'paiement':
+        $billetterieController->afficherPaiement();
+        break;
+    case 'valider_paiement':
+        $billetterieController->validerPaiement();
+        break;
+
+    case 'mes_reservations':
+        $billetterieController->mesReservations();
+        break;
+    case 'admin_reservations':
+        $billetterieController->adminReservations();
+        break;
 
     default:
         $attractionController->erreur("La page demandée n'existe pas dans cette dimension !");

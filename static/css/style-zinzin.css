@@ -489,3 +489,39 @@ a {
     color: #fff;
     border-top: 6px solid var(--rose);
 }
+
+
+/* --- Personnalisation des inputs nombre / flèches de la billetterie --- */
+
+/* Assure un affichage propre de l'input */
+.input-quantite {
+    background: var(--vert);
+    color: var(--noir);
+    font-family: var(--police-texte);
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    border: 3px solid var(--noir);
+    outline: none;
+    transition: background 0.15s ease;
+}
+
+.input-quantite:focus {
+    background: var(--cyan);
+}
+
+/* --- Pour les navigateurs basés sur WebKit (Chrome, Safari, Edge) --- */
+.input-quantite::-webkit-inner-spin-button,
+.input-quantite::-webkit-outer-spin-button {
+    opacity: 1; /* Force l'affichage des flèches */
+    background: var(--noir);
+    border-left: 2px solid var(--noir);
+    cursor: pointer;
+    width: 24px;
+    height: 100%;
+}
+
+/* --- Pour Firefox --- */
+.input-quantite {
+    -moz-appearance: textfield; /* Cache les flèches natives pour un meilleur contrôle si besoin, ou laisse-les par défaut */
+}

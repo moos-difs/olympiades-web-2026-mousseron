@@ -49,7 +49,7 @@ class AuthController {
     public function creerCompteTraitement() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = trim($_POST['nom']);
-            $email = (int)$_POST['email'];
+            $email = trim($_POST['email']);
             $password = trim($_POST['password']);
 
             $existe = $this->model->getUserByEmail($email);

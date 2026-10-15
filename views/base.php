@@ -34,7 +34,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <!-- En-tête / navigation du parc -->
 <header class="entete">
     <a href="index.php?action=accueil" class="entete__logo">
-        <span class="entete__logo-mark" style="color: var(--vert);">🎬</span> STUDIO TOON
+        <span class="entete__logo-mark" style="color: var(--vert);">🎬</span> <span style="color:#fdc80f;">STUDIO</span><span style="color:#fd312d;">TOON</span>
     </a>
     <nav class="entete__nav">
         <a href="index.php?action=accueil">
@@ -46,6 +46,18 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="index.php?action=attractions">
         <?php endif; ?>
             <span class="entete__nav-num">02</span> Attractions
+        </a>
+
+        <a href="index.php?action=billetterie">
+            <span class="entete__nav-num">03</span> Billetterie
+        </a>
+
+        <?php if (isset($_SESSION['user_id']) && $_SESSION['user_role'] === "admin"): ?>
+            <a href="index.php?action=admin_reservations">
+        <?php else : ?>
+            <a href="index.php?action=mes_reservations">
+        <?php endif; ?>
+            <span class="entete__nav-num">04</span> Mes Réservations
         </a>
 
         <?php if (isset($_SESSION['user_id'])): ?>
