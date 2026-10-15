@@ -65,7 +65,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php else : ?>
             <a href="index.php?action=mes_reservations">
         <?php endif; ?>
-            <span class="entete__nav-num">05</span> Mes Réservations
+            <span class="entete__nav-num">05</span>Réservations
         </a>
 
         <?php if (isset($_SESSION['user_id'])): ?>

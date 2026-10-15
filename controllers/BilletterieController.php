@@ -154,4 +154,60 @@ class BilletterieController {
         $reservations = $this->model->getAllReservations();
         require_once 'views/admin_reservations.php';
     }
+
+    // --- NOUVEAU : Afficher le rendu du mail de confirmation pour une commande (Admin) ---
+    public function adminVoirMail($reservation_id) {
+        // 1. Vérification des droits Admin
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        // 2. Récupérer les infos de la réservation et du client
+        $stmt = $this->db->prepare("
+            SELECT r.*, u.nom AS client_nom, u.email AS client_email 
+            FROM reservations r 
+            JOIN utilisateurs u ON r.utilisateur_id = u.id 
+            WHERE r.id = ?
+        ");
+        $stmt->execute([$reservation_id]);
+        $reservation = $stmt->fetch();
+
+        if (!$reservation) {
+            die("Réservation introuvable.");
+        }
+
+        $client_nom = $reservation['client_nom'];
+        $date_visite = $reservation['date_visite'];
+        $prix_total = $reservation['prix_total'];
+
+        // 3. Récupérer les lignes de billets associés à la commande
+        $stmtBillets = $this->db->prepare("
+            SELECT rb.*, t.libelle 
+            FROM reservation_billets rb 
+            JOIN tarifs t ON rb.tarif_id = t.id 
+            WHERE rb.reservation_id = ?
+        ");
+        $stmtBillets->execute([$reservation_id]);
+        $lignes = $stmtBillets->fetchAll();
+
+        // 4. Préparer le tableau des e-billets unitaires avec un code unique imprévisible par billet
+        $e_billets = [];
+        $numero = 1;
+        foreach ($lignes as $ligne) {
+            for ($i = 0; $i < $ligne['quantite']; $i++) {
+                $e_billets[] = [
+                    'libelle' => $ligne['libelle'],
+                    'numero_billet' => $reservation_id . '-' . $numero,
+                    // Génération d'un code unique imprévisible pour chaque billet
+                    'code_unique' => strtoupper(bin2hex(random_bytes(4))) 
+                ];
+                $numero++;
+            }
+        }
+
+        // 5. Inclure directement le template HTML du mail pour l'afficher à l'écran
+        require_once 'views/email_confirmation.php';
+        exit();
+    }
 }

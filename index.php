@@ -93,6 +93,11 @@ switch ($action) {
         $attractionController->apiLive();
         break;
 
+    case 'admin_voir_mail':
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $billetterieController->adminVoirMail($id);
+        break;
+
     default:
         $attractionController->erreur("La page demandée n'existe pas dans cette dimension !");
         break;
