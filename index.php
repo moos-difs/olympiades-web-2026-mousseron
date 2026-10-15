@@ -3,6 +3,7 @@ require_once 'controllers/HomeController.php';
 require_once 'controllers/AttractionController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/BilletterieController.php';
+require_once 'controllers/StatsController.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'accueil';
 
@@ -10,6 +11,7 @@ $homeController = new HomeController();
 $attractionController = new AttractionController();
 $authController = new AuthController();
 $billetterieController = new BilletterieController();
+$statsController = new StatsController();
 
 switch ($action) {
     // Pages publiques
@@ -129,6 +131,14 @@ switch ($action) {
 
     case 'traiter_reset_password':
         $authController->traiterNouveauMotDePasse();
+        break;
+
+    case 'admin_stats':
+        $statsController->index();
+        break;
+
+    case 'carte':
+        $attractionController->afficherCarteInteractif();
         break;
 
     default:

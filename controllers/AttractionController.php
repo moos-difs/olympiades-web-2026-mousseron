@@ -136,4 +136,10 @@ class AttractionController {
         ]);
         exit();
     }
+
+    public function afficherCarteInteractif() {
+        // Récupère toutes les attractions depuis le modèle
+        $attractions = $this->model->getAttractions(); 
+        require_once 'views/carte_interactive.php';
+    }
 }

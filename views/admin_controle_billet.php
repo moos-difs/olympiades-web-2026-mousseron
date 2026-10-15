@@ -1,5 +1,5 @@
 <?php 
-$pageTitle = "Contrôle des Billets - Admin Studio Toon";
+$pageTitle = "Contrôle Billets - Studio Toon";
 ob_start(); 
 ?>
 

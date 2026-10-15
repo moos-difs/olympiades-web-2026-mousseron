@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Oups - Zinzin Land";
+$pageTitle = "Oups - Studio Toon";
 ob_start();
 ?>
     <div class="fiche-veille" style="background: var(--rose); text-align: center; padding: 4rem 2rem;">

@@ -67,4 +67,13 @@ class AttractionModel {
         $stmt = $this->db->query("SELECT id, nom, attente, statut FROM attractions");
         return $stmt->fetchAll();
     }
+
+    public function getAllAttractions() {
+        $stmt = $this->db->query("
+            SELECT a.*, u.libelle AS univers_nom 
+            FROM attractions a 
+            LEFT JOIN univers u ON a.univers_id = u.id
+        ");
+        return $stmt->fetchAll();
+    }
 }

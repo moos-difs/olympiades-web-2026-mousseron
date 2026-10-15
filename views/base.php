@@ -70,7 +70,16 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <?php if (isset($_SESSION["user_id"]) && $_SESSION['user_role'] === 'admin'): ?>
             <a href="index.php?action=admin_controle">
-                Controle tickets
+                <span class="entete__nav-num">06</span>Controle tickets
+            </a>
+
+            <a href="index.php?action=admin_stats">
+                <span class="entete__nav-num">07</span>Statistiques
+            </a>
+
+        <?php else : ?>
+            <a href="index.php?action=carte">
+                <span class="entete__nav-num">06</span>Carte intéractive
             </a>
         <?php endif; ?>
 
