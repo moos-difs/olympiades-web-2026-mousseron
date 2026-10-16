@@ -15,8 +15,8 @@ ob_start();
     </div>
 
     <!-- Tableau de gestion CRUD -->
-    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 1.5rem; overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-family: var(--police-texte);">
+    <div class="table-responsive" style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 1.5rem; overflow-x: auto;">
+        <table class="crud-table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: var(--police-texte);">
             <thead>
                 <tr style="border-bottom: 4px solid var(--noir); background: var(--cyan);">
                     <th style="padding: 0.8rem; border: 2px solid var(--noir);">ID</th>

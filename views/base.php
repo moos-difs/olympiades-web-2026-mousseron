@@ -12,7 +12,9 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Lien vers ton CSS néo-brutaliste -->
     <link rel="stylesheet" href="static/css/style-zinzin.css">
     <!-- Lien vers CSS d'animations -->
-     <link rel="stylesheet" href="static/css/animations.css">
+    <link rel="stylesheet" href="static/css/animations.css">
+    <!-- Lien vers CSS responsive -->
+    <link rel="styleshett" href="static/css/responsive.css">
     <!-- Polices Google Fonts pour le style cartoon / brutaliste -->
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <style>

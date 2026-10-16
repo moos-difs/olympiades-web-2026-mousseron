@@ -1,0 +1,138 @@
+/* ==========================================================================
+   CSS RESPONSIVE UNIVERSEL - STUDIO TOON
+   ========================================================================== */
+
+/* 1. Règle d'or : Empêcher les débordements horizontaux et fluidifier les images */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Adaptation des conteneurs principaux et des en-têtes */
+.page-entete, 
+div[style*="max-width: 900px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 1.2rem !important;
+}
+
+@media (min-width: 768px) {
+    .page-entete, 
+    div[style*="max-width: 900px"] {
+        max-width: 900px !important;
+        padding: 2rem !important;
+    }
+}
+
+/* 3. Adaptation flexible des grilles et des flexbox de formulaires */
+form, 
+div[style*="display: flex"] {
+    flex-wrap: wrap !important;
+}
+
+/* Forcer les champs de saisie et boutons à s'adapter sur mobile */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* 4. Gestion responsive spécifique pour les Tableaux du CRUD Admin */
+/* Enveloppe les tableaux d'un conteneur scrollable horizontalement sur petit écran */
+table {
+    width: 100% !important;
+    border-collapse: collapse;
+}
+
+@media (max-width: 768px) {
+    /* Transforme les tableaux admin en blocs empilés ou ajoute un scroll propre */
+    .table-responsive, 
+    div:has(> table) {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        display: block;
+    }
+
+    /* Réduction des espacements et des tailles de police sur mobile pour les cartes */
+    div[style*="background: #fff"][style*="border: 3px solid var(--noir)"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.8rem !important;
+        padding: 1rem !important;
+    }
+
+    /* Ajustement des boutons d'action dans les listes */
+    div[style*="display: flex; gap: 1rem"] {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    div[style*="display: flex; gap: 1rem"] > * {
+        width: 100% !important;
+        text-align: center;
+    }
+}
+
+/* 5. Navigation et Menus sur petits écrans */
+@media (max-width: 600px) {
+    header, nav, .navbar {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+        text-align: center;
+    }
+    
+    h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* Conteneur strict bloqué à 100% de la largeur de l'écran */
+.table-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 3px solid var(--noir);
+    background: #fff;
+    box-shadow: 4px 4px 0 var(--noir);
+    margin-top: 1rem;
+    box-sizing: border-box;
+}
+
+/* Le tableau s'adapte et reste confiné à l'intérieur du conteneur */
+.crud-table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; 
+}
+
+.crud-table th, 
+.crud-table td {
+    padding: 0.6rem 0.5rem;
+    border: 2px solid var(--noir);
+    text-align: left;
+    font-size: 0.8rem; /* Réduit légèrement la police sur mobile pour tout faire entrer */
+    word-break: break-word;
+}
