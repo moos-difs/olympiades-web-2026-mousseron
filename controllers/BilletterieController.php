@@ -189,9 +189,9 @@ class BilletterieController {
         require_once 'views/admin_reservations.php';
     }
 
-    // --- NOUVEAU : Afficher le rendu du mail de confirmation pour une commande (Admin) ---
-    public function adminVoirMail($reservation_id) {
-        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    // --- NOUVEAU : Afficher le rendu du mail de confirmation pour une commande  ---
+    public function voirMail($reservation_id) {
+        if (!isset($_SESSION['user_role'])) {
             header('Location: index.php?action=login');
             exit();
         }

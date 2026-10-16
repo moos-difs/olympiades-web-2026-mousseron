@@ -106,9 +106,9 @@ switch ($action) {
         $attractionController->apiLive();
         break;
 
-    case 'admin_voir_mail':
+    case 'voir_mail':
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        $billetterieController->adminVoirMail($id);
+        $billetterieController->voirMail($id);
         break;
 
     case 'admin_controle':
@@ -145,6 +145,14 @@ switch ($action) {
 
     case 'api':
         $apiController->apiGetData();
+        break;
+
+    /*case 'planificateur':
+        $attractionController->;
+        break;**/
+
+    case 'account':
+        $authController->afficherProfil();
         break;
 
     default:

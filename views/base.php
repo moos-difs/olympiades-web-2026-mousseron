@@ -81,13 +81,16 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="index.php?action=carte">
                 <span class="entete__nav-num">06</span>Carte intéractive
             </a>
+            <a href="index.php?action=planificateur">
+                <span class="entete__nav-num">07</span>Planificateur
+            </a>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['user_id'])): ?>
             <!-- Affiché si connecté -->
-            <span style="background: var(--violet); color: #fff; padding: 0.4rem 0.8rem; border: 3px solid var(--noir); font-size: 0.85rem; display: flex; align-items: center;">
+            <a href="index.php?action=account" style="background: var(--violet); color: #fff; padding: 0.4rem 0.8rem; border: 3px solid var(--noir); font-size: 0.85rem; display: flex; align-items: center;">
                     <?= htmlspecialchars($_SESSION['user_nom']) ?> (<?= $_SESSION['user_role'] === 'admin' ? '⭐ Admin' : '👤 User' ?>)
-                </span>
+            </a>
             <a href="index.php?action=logout" style="background: var(--rose); color: #fff;">Déconnexion</a>
         <?php else: ?>
             <!-- Affiché si visiteur non connecté -->

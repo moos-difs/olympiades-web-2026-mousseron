@@ -14,6 +14,29 @@ class AuthModel {
         return $stmt->fetch();
     }
 
+    // Récupérer un utilisateur par son ID (pour la page profil)
+    public function getUserById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    // Récupérer l'historique des réservations d'un utilisateur
+    // Récupérer l'historique des réservations d'un utilisateur
+    public function getReservationsByUser($userId) {
+        $stmt = $this->db->prepare("
+            SELECT r.*, 
+                   SUM(rb.quantite) as total_billets
+            FROM reservations r 
+            LEFT JOIN reservation_billets rb ON rb.reservation_id = r.id
+            WHERE r.utilisateur_id = ? 
+            GROUP BY r.id
+            ORDER BY r.id DESC
+        ");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
     public function newUser($nom, $email, $password) {
         $hashed_password = password_hash($password, PASSWORD_ARGON2ID);
         $stmt = $this->db->prepare("
@@ -49,7 +72,6 @@ class AuthModel {
 
     // Mettre à jour le mot de passe et réinitialiser les champs de token
     public function updatePasswordAndClearToken($user_id, $nouveau_password) {
-        // Utilisation d'Argon2id comme spécifié dans ton stack technique
         $hash = password_hash($nouveau_password, PASSWORD_ARGON2ID);
 
         $stmt = $this->db->prepare("

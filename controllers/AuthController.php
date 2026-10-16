@@ -44,6 +44,24 @@ class AuthController {
         exit();
     }
 
+    // --- AFFICHAGE DU PROFIL UTILISATEUR ---
+    public function afficherProfil() {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        $userId = $_SESSION['user_id'];
+        
+        // Informations du compte
+        $utilisateur = $this->model->getUserById($userId);
+        
+        // Liste des réservations pour accéder aux e-billets
+        $reservations = $this->model->getReservationsByUser($userId);
+
+        require_once 'views/user_account.php';
+    }
+
     public function creerCompteForm() {
         require_once 'views/user_form_compte.php';
     }
@@ -56,7 +74,7 @@ class AuthController {
 
             $existe = $this->model->getUserByEmail($email);
             if ($existe) {
-                $erreur = "Cet email est déja utilisé par un autre compte.";
+                $erreur = "Cet email est déjà utilisé par un autre compte.";
                 require_once 'views/user_form_compte.php';
                 return;
             }
@@ -78,23 +96,17 @@ class AuthController {
             $user = $this->model->getUserByEmail($email);
 
             if ($user) {
-                // 1. Génération du token et enregistrement en BDD
                 $token = bin2hex(random_bytes(32));
                 $this->model->saveResetToken($user['id'], $token);
 
-                // 2. Construction propre et dynamique du lien (évite le dashboard XAMPP)
                 $protocole = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
                 $hote = $_SERVER['HTTP_HOST'];
-                
-                // Récupère le dossier du projet (ex: /studio-toon)
                 $dossier_projet = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
-                // Lien complet pointant vers ton routeur index.php avec le token
                 $reset_link = $protocole . "://" . $hote . $dossier_projet . "/index.php?action=reset_password&token=" . $token;
 
-                // 3. Stockage en session pour que la prévisualisation du mail récupère les bonnes infos
                 $_SESSION['mail_preview'] = [
-                    'user_prenom' => $user['nom'], // ou $user['prenom'] selon ta base de données
+                    'user_prenom' => $user['nom'],
                     'reset_link' => $reset_link
                 ];
 
@@ -107,12 +119,9 @@ class AuthController {
         }
     }
 
-
-    // Afficher le formulaire de saisie du nouveau mot de passe
     public function afficherFormulaireNouveauMotDePasse() {
         $token = $_GET['token'] ?? '';
         
-        // Vérifier si le token est valide
         $user = $this->model->findByValidResetToken($token);
         
         if (!$user) {
@@ -122,7 +131,6 @@ class AuthController {
         require_once 'views/reset_password_form.php';
     }
 
-    // Traiter la mise à jour du mot de passe
     public function traiterNouveauMotDePasse() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = $_POST['token'] ?? '';
@@ -143,10 +151,8 @@ class AuthController {
                 return;
             }
 
-            // Mise à jour du mot de passe et suppression du token
             $this->model->updatePasswordAndClearToken($user['id'], $nouveau_mdp);
 
-            // Redirection vers la page de connexion avec un message de succès
             header('Location: index.php?action=login&reset=success');
             exit();
         }
