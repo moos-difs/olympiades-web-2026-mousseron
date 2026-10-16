@@ -3,9 +3,32 @@ $pageTitle = "Temps d'attente en Live - Studio Toon";
 ob_start(); 
 ?>
 
+<style>
+/* Animations de variation de temps d'attente */
+@keyframes flashRouge {
+    0% { background-color: rgba(255, 46, 166, 0.3); transform: scale(1.05); }
+    100% { background-color: transparent; transform: scale(1); }
+}
+
+@keyframes flashVert {
+    0% { background-color: rgba(0, 255, 156, 0.4); transform: scale(1.05); }
+    100% { background-color: transparent; transform: scale(1); }
+}
+
+.temps-hausse {
+    color: #ff2ea6 !important;
+    animation: flashRouge 0.8s ease;
+}
+
+.temps-baisse {
+    color: #00b862 !important;
+    animation: flashVert 0.8s ease;
+}
+</style>
+
 <div class="page-entete" style="background: var(--cyan); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem; margin-bottom: 2rem;">
     <h1 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; margin: 0;">⏱️ Live du Parc</h1>
-    <p class="page-entete__intro" style="font-weight: 700; margin-top: 0.5rem;">Temps d'attente en temps réel avec mise à jour instantanée sans rechargement.</p>
+    <p class="page-entete__intro" style="font-weight: 700; margin-top: 0.5rem;">Temps d'attente en temps réel avec mise à jour instantanée par WebSocket.</p>
     <div style="margin-top: 1rem; font-weight: 800; font-size: 0.9rem;">
         Dernière mise à jour : <span id="derniere-maj" style="background: #fff; padding: 0.2rem 0.5rem; border: 2px solid var(--noir);">--:--:--</span>
     </div>
@@ -27,7 +50,6 @@ function fetchTempsLive() {
         .then(response => response.json())
         .then(data => {
             const grille = document.getElementById('grille-live');
-            // Met à jour avec l'heure renvoyée par le serveur lors du fetch
             if (data.derniere_maj) {
                 document.getElementById('derniere-maj').textContent = data.derniere_maj;
             }
@@ -42,6 +64,7 @@ function fetchTempsLive() {
                 const estFerme = att.statut === 'Ferme' || att.statut === 'Maintenance';
                 const couleurStatut = estFerme ? 'background: #ff2ea6; color: #fff;' : 'background: #00ff9c; color: #101010;';
                 const texteAttente = estFerme ? '—' : att.attente + ' min';
+                const valeurNumerique = estFerme ? 0 : att.attente;
                 
                 html += `
                     <div id="attraction-${att.id}" style="background: #fff; border: 4px solid var(--noir); box-shadow: 6px 6px 0 var(--noir); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
@@ -55,7 +78,7 @@ function fetchTempsLive() {
                         </div>
                         <div style="margin-top: 1rem; border-top: 3px dashed var(--noir); padding-top: 0.8rem; text-align: center;">
                             <span style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; display: block; color: #555;">Temps d'attente</span>
-                            <span class="valeur-attente" style="font-family: 'Archivo Black', Impact, sans-serif; font-size: 2rem; color: var(--violet, #7c3aff);">
+                            <span class="valeur-attente" data-temps="${valeurNumerique}" style="font-family: 'Archivo Black', Impact, sans-serif; font-size: 2rem; color: var(--violet, #7c3aff); display: inline-block; transition: transform 0.2s ease;">
                                 ${texteAttente}
                             </span>
                         </div>
@@ -70,10 +93,10 @@ function fetchTempsLive() {
         });
 }
 
-// Chargement initial des données au chargement de la page
+// Chargement initial des cartes
 fetchTempsLive();
 
-// Connexion au serveur WebSocket pour intercepter les modifs admin instantanément
+// Connexion au WebSocket pour la mise à jour en direct ciblée + animations de couleur
 const ws = new WebSocket('ws://localhost:8080');
 
 ws.onopen = function() {
@@ -81,20 +104,38 @@ ws.onopen = function() {
 };
 
 ws.onmessage = function(event) {
+    console.log("Message brut reçu du WebSocket :", event.data); // <-- Ajoutez ceci pour inspecter
     try {
         const data = JSON.parse(event.data);
+        console.log("Données parsées :", data);
         
         if (data.type === 'UPDATE_ATTRACTION') {
-            console.log("Mise à jour en direct reçue pour :", data.nom);
-            
             let carte = document.getElementById('attraction-' + data.id);
             if (carte) {
                 const estFerme = data.statut === 'Ferme' || data.statut === 'Maintenance';
                 const texteAttente = estFerme ? '—' : data.attente + ' min';
+                const nouveauTempsNum = estFerme ? 0 : parseInt(data.attente);
                 
-                // Actualisation immédiate du temps et du statut sans recharger la page
-                carte.querySelector('.valeur-attente').textContent = texteAttente;
+                const elementValeur = carte.querySelector('.valeur-attente');
+                const ancienTempsNum = parseInt(elementValeur.getAttribute('data-temps') || 0);
                 
+                // Met à jour le texte et l'attribut stocké
+                elementValeur.textContent = texteAttente;
+                elementValeur.setAttribute('data-temps', nouveauTempsNum);
+                
+                // Gestion des animations de couleur (Vert / Rouge) sans recharger la page
+                elementValeur.classList.remove('temps-hausse', 'temps-baisse');
+                void elementValeur.offsetWidth; // Force le reflow CSS pour relancer l'animation
+                
+                if (!estFerme) {
+                    if (nouveauTempsNum > ancienTempsNum) {
+                        elementValeur.classList.add('temps-hausse'); // Rouge si ça monte
+                    } else if (nouveauTempsNum < ancienTempsNum) {
+                        elementValeur.classList.add('temps-baisse'); // Vert si ça baisse
+                    }
+                }
+                
+                // Actualisation du badge statut
                 const badgeStatut = carte.querySelector('.badge-statut');
                 badgeStatut.textContent = data.statut;
                 if (estFerme) {

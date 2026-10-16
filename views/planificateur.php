@@ -1,5 +1,6 @@
 <?php 
 $pageTitle = "Planificateur de Journée - Studio Toon";
+$taille_visiteur = $taille_visiteur ??'1.20';
 ob_start(); 
 ?>
 

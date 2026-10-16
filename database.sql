@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 16 oct. 2026 à 13:49
+-- Généré le : ven. 16 oct. 2026 à 17:54
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `olympiades`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin_logs_attentes`
+--
+
+CREATE TABLE `admin_logs_attentes` (
+  `id` int(11) NOT NULL,
+  `attraction_id` int(11) NOT NULL,
+  `ancien_temps` int(11) DEFAULT NULL,
+  `nouveau_temps` int(11) DEFAULT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `date_modification` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `admin_logs_attentes`
+--
+
+INSERT INTO `admin_logs_attentes` (`id`, `attraction_id`, `ancien_temps`, `nouveau_temps`, `admin_id`, `date_modification`) VALUES
+(1, 1, 15, 55, 1, '2026-10-16 17:51:55');
 
 -- --------------------------------------------------------
 
@@ -47,9 +69,9 @@ CREATE TABLE `attractions` (
 --
 
 INSERT INTO `attractions` (`id`, `nom`, `image`, `description`, `gag`, `caracteristiques`, `taille_minimale`, `statut`, `univers_id`, `attente`, `coord_x`, `coord_y`) VALUES
-(1, 'La Falaise', 'falaise.png', 'Une tour de chute thématisée en gigantesque falaise en trompe-l\'œil style carton-pâte, surmontée d\'un faux panneau signalétique « Attention, vide ».', 'Le personnage court dans le vide, ne tombe pas immédiatement, regarde en bas, puis réalise sa chute.', 'Hauteur : 65 m | Vitesse : ~100 km/h | Durée : 2 min', 120, 'Ouvert', 1, 25, 50.00, 50.00),
-(2, 'Le Trou Portable', 'trou_portable.png', 'Un parcours sombre familial à bord de véhicules de 4 places qui traversent des salles aux styles graphiques changeants (du simple crayonné aux aplats de couleurs saturées).', 'Un simple trou peint sur un mur que l\'\'on traverse comme s\'\'il s\'\'agissait d\'\'un véritable passage secret.', 'Durée : 6 min | Capacité : 1 200 pers/h | Accessible dès 0,90m (accompagné)', 90, 'Ouvert', 1, 20, 50.00, 50.00),
-(3, 'Le Canon de Cirque', 'canon_cirque.png', 'Des montagnes russes à lancement dont la gare est thématisée en chapiteau de cirque avec une bouche de canon béante.', 'Le train est propulsé hors d\'un canon géant, tout droit sorti d\'un numéro de cirque burlesque.', 'Lancement : 0 à 110 km/h en 3s | Bosse : 45 m | Longueur : 700 m | Durée : 1 min 10', 130, 'Ouvert', 2, 45, 50.00, 50.00),
+(1, 'La Falaise', 'falaise.png', 'Une tour de chute thématisée en gigantesque falaise en trompe-l\'œil style carton-pâte, surmontée d\'un faux panneau signalétique « Attention, vide ».', 'Le personnage court dans le vide, ne tombe pas immédiatement, regarde en bas, puis réalise sa chute.', 'Hauteur : 65 m | Vitesse : ~100 km/h | Durée : 2 min', 120, 'Ouvert', 1, 15, 50.00, 50.00),
+(2, 'Le Trou Portable', 'trou_portable.png', 'Un parcours sombre familial à bord de véhicules de 4 places qui traversent des salles aux styles graphiques changeants (du simple crayonné aux aplats de couleurs saturées).', 'Un simple trou peint sur un mur que l\'\'on traverse comme s\'\'il s\'\'agissait d\'\'un véritable passage secret.', 'Durée : 6 min | Capacité : 1 200 pers/h | Accessible dès 0,90m (accompagné)', 90, 'Ouvert', 1, 10, 50.00, 50.00),
+(3, 'Le Canon de Cirque', 'canon_cirque.png', 'Des montagnes russes à lancement dont la gare est thématisée en chapiteau de cirque avec une bouche de canon béante.', 'Le train est propulsé hors d\'un canon géant, tout droit sorti d\'un numéro de cirque burlesque.', 'Lancement : 0 à 110 km/h en 3s | Bosse : 45 m | Longueur : 700 m | Durée : 1 min 10', 130, 'Ouvert', 2, 25, 50.00, 50.00),
 (4, 'L’Enclume Express', 'enclume_express.png', 'Un parcours décoiffant à travers l\'atelier des armes loufoques du studio.', 'Une énorme enclume tombe du ciel pile au moment du départ.', 'Vitesse : 80 km/h | Durée : 1 min 30', 120, 'Maintenance', 2, NULL, 50.00, 50.00);
 
 -- --------------------------------------------------------
@@ -365,6 +387,13 @@ INSERT INTO `utilisateurs` (`id`, `nom`, `email`, `mot_de_passe`, `role`, `reset
 --
 
 --
+-- Index pour la table `admin_logs_attentes`
+--
+ALTER TABLE `admin_logs_attentes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `attraction_id` (`attraction_id`);
+
+--
 -- Index pour la table `attractions`
 --
 ALTER TABLE `attractions`
@@ -420,6 +449,12 @@ ALTER TABLE `utilisateurs`
 --
 
 --
+-- AUTO_INCREMENT pour la table `admin_logs_attentes`
+--
+ALTER TABLE `admin_logs_attentes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT pour la table `attractions`
 --
 ALTER TABLE `attractions`
@@ -464,6 +499,12 @@ ALTER TABLE `utilisateurs`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `admin_logs_attentes`
+--
+ALTER TABLE `admin_logs_attentes`
+  ADD CONSTRAINT `admin_logs_attentes_ibfk_1` FOREIGN KEY (`attraction_id`) REFERENCES `attractions` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `attractions`

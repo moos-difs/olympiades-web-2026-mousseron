@@ -80,7 +80,7 @@ Lien vers le fichier de conception graphique : [Lien Figma - Studio Toon](https:
 - Page de connexion avec compte administrateur, option de déconnexion, et compte sécurisé par mot de passe haché par l'algorithme argon2id,
 - Protection du serveur contre les injections SQL à l'aide de requêtes préparées,
 - Page CRUD des attractions, avec refus d'un mauvais formulaire et confirmation de suppression,
-- Temps d'attente saisi par l'administrateur et conservation par base de log des changements.
+- Temps d'attente saisi par l'administrateur et conservation par base de log des changements (uniquement quand changement fait à la main dans le formulaire admin).
 
 **[✅] Palier 3 : La billetterie**
 - Ajout d'un compte utilisateur avec email et mot de passe, refus d'un email non unique ou invalide, mots de passes hachés également,
@@ -107,11 +107,9 @@ Lien vers le fichier de conception graphique : [Lien Figma - Studio Toon](https:
 - Fichier CSS ajoutant des animations fluides et soignées pour améliorer l'exérience utilisateur,
 - Idée personnelle -> Page Carte Intéractive, avec plan du site et bouton de chaque attraction sur le plan pour les informations la concernant.
 ## 🐛 8. Bugs Connus
-Administration : Manque de responsivité (responsive design) sur l'interface de gestion du CRUD des attractions (affichage sur mobile perfectible).
+Administration : Design non responsive sur l'interface de gestion du CRUD des attractions (affichage sur mobile perfectible).
 
 ## 💡 9. Choix Techniques
-[À remplir : ex. Utilisation de PHP natif sans framework pour maîtriser le routing, choix du Brutalisme/Neumorphism pour l'UI, couplage PHP/Python pour la simulation, etc.]
-
 **Techno utilisées :**
 PHP vanilla
 

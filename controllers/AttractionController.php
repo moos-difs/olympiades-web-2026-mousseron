@@ -95,7 +95,21 @@ class AttractionController {
             $taille_minimale = (int)$_POST['taille_minimale'];
             $statut = $_POST['statut'];
 
+            // 1. Récupérer l'ancien temps d'attente avant modification
+            // (Selon votre architecture, vous pouvez passer par votre modèle ou un accès direct au PDO)
+            $ancienTemps = null;
+            if (method_exists($this->model, 'getAttractionById')) {
+                $attractionActuelle = $this->model->getAttractionById($id);
+                $ancienTemps = $attractionActuelle['attente'] ?? null;
+            }
+
+            // 2. Mettre à jour l'attraction
             $this->model->updateAttraction($id, $nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id);
+
+            // 3. Enregistrer dans la table de log uniquement si le temps a été manipulé/modifié par l'admin
+            if (method_exists($this->model, 'logAdminAttenteModification')) {
+                $this->model->logAdminAttenteModification($id, $ancienTemps, $attente, $_SESSION['user_id'] ?? null);
+            }
 
             // --- NOTIFICATION WEBSOCKET EN TEMPS RÉEL ---
             $donneesActu = json_encode([

@@ -1,4 +1,5 @@
-
+import websocket
+import json
 import os
 import time
 import random
@@ -81,10 +82,15 @@ def mettre_a_jour():
         curseur = connexion.cursor()
         heure = datetime.now().hour
 
-        curseur.execute(
-            "SELECT id, nom, statut FROM attractions"
-        )
+        curseur.execute("SELECT id, nom, statut FROM attractions")
         attractions = curseur.fetchall()
+
+        # Ouvre la connexion WebSocket une seule fois pour tout le lot
+        try:
+            ws = websocket.create_connection("ws://localhost:8080")
+        except Exception as e:
+            print("Impossible de joindre le serveur WebSocket :", e)
+            ws = None
 
         for identifiant, nom, statut in attractions:
             if statut != "Ouvert":
@@ -100,17 +106,46 @@ def mettre_a_jour():
                 """,
                 (attente, identifiant),
             )
+            
+            # Envoie la notif via le même socket ouvert
+            if ws:
+                try:
+                    message = json.dumps({
+                        "type": "UPDATE_ATTRACTION",
+                        "id": identifiant,
+                        "nom": nom,
+                        "attente": 0 if attente is None else attente,
+                        "statut": statut
+                    })
+                    ws.send(message)
+                except Exception as ws_err:
+                    print("Erreur d'envoi WebSocket :", ws_err)
+
+        if ws:
+            ws.close()
 
         connexion.commit()
-        print(
-            f"[{datetime.now():%H:%M:%S}] "
-            f"{len(attractions)} attractions mises à jour."
-        )
+        print(f"[{datetime.now():%H:%M:%S}] {len(attractions)} attractions mises à jour et notifiées.")
 
     finally:
         curseur.close()
         connexion.close()
 
+
+# Fonction pour notifier les clients connectés via le WebSocket PHP
+def notifier_websocket(id_attraction, nouveau_temps, statut):
+    try:
+        ws = websocket.create_connection("ws://localhost:8080")
+        message = json.dumps({
+            "type": "UPDATE_ATTRACTION",
+            "id": id_attraction,
+            "attente": nouveau_temps,
+            "statut": statut
+        })
+        ws.send(message)
+        ws.close()
+    except Exception as e:
+        print("Erreur de notification WebSocket depuis Python :", e)
 
 if __name__ == "__main__":
     print("Simulation des temps d'attente démarrée.")

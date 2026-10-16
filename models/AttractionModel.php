@@ -76,4 +76,12 @@ class AttractionModel {
         ");
         return $stmt->fetchAll();
     }
+
+    public function logAdminAttenteModification($attractionId, $ancienTemps, $nouveauTemps, $adminId) {
+        $stmt = $this->db->prepare("
+            INSERT INTO admin_logs_attentes (attraction_id, ancien_temps, nouveau_temps, admin_id) 
+            VALUES (?, ?, ?, ?)
+        ");
+        return $stmt->execute([$attractionId, $ancienTemps, $nouveauTemps, $adminId]);
+    }
 }
