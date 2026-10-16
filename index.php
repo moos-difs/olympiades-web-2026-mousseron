@@ -147,9 +147,9 @@ switch ($action) {
         $apiController->apiGetData();
         break;
 
-    /*case 'planificateur':
-        $attractionController->;
-        break;**/
+    case 'planificateur':
+        $attractionController->planificateur();
+        break;
 
     case 'account':
         $authController->afficherProfil();

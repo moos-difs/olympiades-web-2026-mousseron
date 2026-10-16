@@ -148,4 +148,34 @@ class AttractionController {
         $attractions = $this->model->getAttractions(); 
         require_once 'views/carte_interactive.php';
     }
+
+    public function planificateur() {
+        // Récupération de la taille en mètres (ex: 1.20)
+        $taille_visiteur_metres = isset($_GET['taille_visiteur']) ? (float)str_replace(',', '.', $_GET['taille_visiteur']) : 1.20;
+        
+        // On convertit la taille du visiteur en centimètres pour correspondre à la BDD (ex: 1.20m -> 120cm)
+        $taille_visiteur_cm = $taille_visiteur_metres * 100;
+
+        $toutesAttractions = $this->model->getAttractions();
+
+        $parcours = array_filter($toutesAttractions, function($att) use ($taille_visiteur_cm) {
+            // Vérification du statut (doit être 'Ouvert')
+            $estOuvert = (strcasecmp(trim($att['statut'] ?? ''), 'Ouvert') === 0);
+            
+            // Taille minimale en BDD (ex: 120, 90, 130)
+            $tailleMinDb = (float)($att['taille_minimale'] ?? 0);
+
+            // Le visiteur en cm doit être >= à la taille minimale en cm
+            $tailleOk = $taille_visiteur_cm >= $tailleMinDb;
+
+            return $estOuvert && $tailleOk;
+        });
+
+        // Tri par temps d'attente croissant (du plus court au plus long)
+        usort($parcours, function($a, $b) {
+            return ((int)($a['attente'] ?? 0)) <=> ((int)($b['attente'] ?? 0));
+        });
+
+        require_once 'views/planificateur.php';
+    }
 }
