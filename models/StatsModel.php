@@ -47,7 +47,6 @@ class StatsModel {
     // --- Temps d'attente moyen par heure (si tu as une table d'historique des temps d'attente, ou simulation basée sur les plages horaires) ---
     public function getTempsAttenteParHeure() {
         // Exemple basé sur une table de log d'attente ou regroupement par tranche horaire
-        // Si tu n'as pas de table d'historique horaire, on peut simuler ou adapter selon ta BDD :
         $stmt = $this->db->query("
             SELECT HOUR(date_maj) as heure, AVG(temps_attente) as moyenne_attente
             FROM historique_attentes
@@ -69,18 +68,45 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
-    // --- Comparatif Billets Vendus vs Billets Validés par Jour ---
-    public function getComparatifVendusVsValidesParJour() {
+    public function getBilletsRestantsParJour() {
         $stmt = $this->db->query("
+            SELECT r.date_visite, 
+                   SUM(rb.quantite) as total_vendus,
+                   (2000 - SUM(rb.quantite)) as total_restants
+            FROM reservations r
+            JOIN reservation_billets rb ON r.id = rb.reservation_id
+            GROUP BY r.date_visite
+            ORDER BY r.date_visite ASC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function getComparatifVendusVsValidesParDate($date_selectionnee = null) {
+        $sql = "
             SELECT r.date_visite, 
                    COUNT(eb.id) as total_vendus,
                    SUM(CASE WHEN eb.est_utilise = 1 THEN 1 ELSE 0 END) as total_valides
             FROM reservations r
             JOIN e_billets eb ON r.id = eb.reservation_id
-            GROUP BY r.date_visite
-            ORDER BY r.date_visite ASC
-            LIMIT 7
-        ");
+        ";
+        
+        if ($date_selectionnee) {
+            $sql .= " WHERE r.date_visite = ?";
+        }
+        
+        $sql .= " GROUP BY r.date_visite ORDER BY r.date_visite ASC";
+
+        $stmt = $this->db->prepare($sql);
+        if ($date_selectionnee) {
+            $stmt->execute([$date_selectionnee]);
+        } else {
+            $stmt->execute();
+        }
+        return $stmt->fetchAll();
+    }
+
+    public function getDatesVisitesUniques() {
+        $stmt = $this->db->query("SELECT DISTINCT date_visite FROM reservations ORDER BY date_visite ASC");
         return $stmt->fetchAll();
     }
 }

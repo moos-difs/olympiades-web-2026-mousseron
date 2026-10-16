@@ -4,6 +4,7 @@ require_once 'controllers/AttractionController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/BilletterieController.php';
 require_once 'controllers/StatsController.php';
+require_once 'controllers/ApiController.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'accueil';
 
@@ -12,6 +13,7 @@ $attractionController = new AttractionController();
 $authController = new AuthController();
 $billetterieController = new BilletterieController();
 $statsController = new StatsController();
+$apiController = new ApiController();
 
 switch ($action) {
     // Pages publiques
@@ -139,6 +141,10 @@ switch ($action) {
 
     case 'carte':
         $attractionController->afficherCarteInteractif();
+        break;
+
+    case 'api':
+        $apiController->apiGetData();
         break;
 
     default:

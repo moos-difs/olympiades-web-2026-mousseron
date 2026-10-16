@@ -22,8 +22,29 @@ class BilletterieController {
 
     public function afficherFormulaire() {
         $this->checkAuth();
-        $tarifs = $this->model->getTarifs();
+        $tarifsDB = $this->model->getTarifs();
         $today = date('Y-m-d');
+        
+        // Récupérer la date choisie dans l'URL (si l'utilisateur a changé la date)
+        $date_visite = isset($_GET['date_visite']) ? $_GET['date_visite'] : $today;
+        if ($date_visite < $today) {
+            $date_visite = $today;
+        }
+
+        // Calculer les prix dynamiques pour chaque tarif en fonction de cette date
+        $tarifs = [];
+        foreach ($tarifsDB as $t) {
+            // Utilisation de votre méthode de prix dynamique basée sur les places restantes
+            $prixDynamique = $this->model->getPrixDynamiqueParPlacesRestantes($t['id'], $t['prix'], $date_visite);
+            
+            $tarifs[] = [
+                'id' => $t['id'],
+                'libelle' => $t['libelle'],
+                'description' => $t['description'],
+                'prix' => $prixDynamique // On injecte le prix dynamique calculé !
+            ];
+        }
+
         require_once 'views/billetterie.php';
     }
 
@@ -43,26 +64,20 @@ class BilletterieController {
                 return;
             }
 
-            // Calcul du nombre de billets demandés et du prix total
             $tarifsDB = $this->model->getTarifs();
             $prix_total = 0.00;
             $billets_details = [];
             $total_tickets_demandés = 0;
+
+            // 1. Vérification de la jauge globale (max 2000)
+            $dejaVendus = $this->model->getNombreBilletsVendusPourDate($date_visite);
+            $placesRestantes = 2000 - $dejaVendus;
 
             foreach ($tarifsDB as $t) {
                 $id = $t['id'];
                 $qty = isset($quantites[$id]) ? (int)$quantites[$id] : 0;
                 if ($qty > 0) {
                     $total_tickets_demandés += $qty;
-                    $sous_total = $qty * $t['prix'];
-                    $prix_total += $sous_total;
-                    $billets_details[] = [
-                        'tarif_id' => $id,
-                        'libelle' => $t['libelle'],
-                        'quantite' => $qty,
-                        'prix_unitaire' => $t['prix'],
-                        'sous_total' => $sous_total
-                    ];
                 }
             }
 
@@ -73,10 +88,6 @@ class BilletterieController {
                 return;
             }
 
-            // --- VÉRIFICATION DE LA JAUGE (MAX 2000 PLACES PAR JOUR) ---
-            $dejaVendus = $this->model->getNombreBilletsVendusPourDate($date_visite);
-            $placesRestantes = 2000 - $dejaVendus;
-
             if ($total_tickets_demandés > $placesRestantes) {
                 $erreur = "Désolé ! Il ne reste plus que $placesRestantes place(s) disponible(s) pour le " . date('d/m/Y', strtotime($date_visite)) . " (Maximum 2000 visiteurs par jour).";
                 $tarifs = $tarifsDB;
@@ -84,14 +95,35 @@ class BilletterieController {
                 return;
             }
 
-            // Stockage temporaire en session pour la page de paiement sécurisée
+            // 2. Calcul du prix dynamique basé sur les places restantes pour chaque ligne
+            foreach ($tarifsDB as $t) {
+                $id = $t['id'];
+                $qty = isset($quantites[$id]) ? (int)$quantites[$id] : 0;
+                
+                if ($qty > 0) {
+                    // Appel de la règle dynamique selon les places restantes
+                    $prix_unitaire_dynamique = $this->model->getPrixDynamiqueParPlacesRestantes($id, $t['prix'], $date_visite);
+                    $sous_total = $qty * $prix_unitaire_dynamique;
+                    
+                    $prix_total += $sous_total;
+                    
+                    $billets_details[] = [
+                        'tarif_id' => $id,
+                        'libelle' => $t['libelle'],
+                        'quantite' => $qty,
+                        'prix_unitaire' => $prix_unitaire_dynamique, // Prix unitaire ajusté selon la rareté
+                        'sous_total' => $sous_total
+                    ];
+                }
+            }
+
+            // Stockage temporaire en session pour la page de paiement
             $_SESSION['panier_resa'] = [
                 'date_visite' => $date_visite,
                 'prix_total' => $prix_total,
                 'billets' => $billets_details
             ];
 
-            // Redirection vers la fausse page de paiement
             header('Location: index.php?action=paiement');
             exit();
         }

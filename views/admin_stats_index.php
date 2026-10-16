@@ -39,7 +39,38 @@ ob_start();
         </div>
     </div>
 
-    <!-- 2. GRAPHIQUE : BILLETS VENDUS ET CA PAR JOUR -->
+    <!-- 2. BILLETS RESTANTS À VENDRE PAR JOUR (Jauge 2000 places) -->
+    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
+        <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
+            🎟️ Places Restantes par Jour (Jauge max : 2000)
+        </h2>
+
+        <?php if (!empty($billets_restants)): ?>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                <?php foreach ($billets_restants as $b): ?>
+                    <?php 
+                        $restants = (int)$b['total_restants'];
+                        $couleurStock = $restants < 100 ? 'var(--rose)' : ($restants < 500 ? 'var(--orange)' : 'var(--vert)');
+                    ?>
+                    <div style="background: #fff; border: 3px solid var(--noir); padding: 1rem; box-shadow: 4px 4px 0 var(--noir);">
+                        <div style="font-weight: 900; font-size: 0.95rem; margin-bottom: 5px;">🗓️ <?= date('d/m/Y', strtotime($b['date_visite'])) ?></div>
+                        <div style="font-size: 1.5rem; font-weight: 900; color: <?= $couleurStock ?>;">
+                            <?= $restants ?> places
+                        </div>
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #666; margin-top: 5px;">
+                            (<?= $b['total_vendus'] ?> vendus / 2000)
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p style="font-weight: 700; text-align: center; padding: 1.5rem; background: #fff; border: 2px dashed var(--noir);">
+                Aucune réservation enregistrée pour calculer les stocks restants.
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <!-- 3. GRAPHIQUE : BILLETS VENDUS ET CA PAR JOUR -->
     <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
         <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
             📅 Billets & Chiffre d'Affaires par Jour de Visite
@@ -51,7 +82,6 @@ ob_start();
                     <?php 
                         $billets = (int)$ligne['total_billets_jour'];
                         $caJour = (float)$ligne['ca_jour'];
-                        // Calcul d'un pourcentage pour la barre visuelle (base max arbitraire 500 billets/jour pour l'échelle)
                         $pct = min(100, ($billets / 500) * 100);
                     ?>
                     <div style="background: #fff; border: 2px solid var(--noir); padding: 1rem; box-shadow: 4px 4px 0 var(--noir);">
@@ -62,7 +92,6 @@ ob_start();
                         <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">
                             <span>Volume : <strong><?= $billets ?></strong> billets</span>
                         </div>
-                        <!-- Barre graphique néo-brutaliste -->
                         <div style="background: #eee; border: 2px solid var(--noir); width: 100%; height: 18px;">
                             <div style="background: var(--orange); width: <?= $pct ?>%; height: 100%; border-right: 2px solid var(--noir);"></div>
                         </div>
@@ -76,7 +105,7 @@ ob_start();
         <?php endif; ?>
     </div>
 
-    <!-- 3. TEMPS D'ATTENTE MOYEN PAR ATTRACTION -->
+    <!-- 4. TEMPS D'ATTENTE MOYEN PAR ATTRACTION -->
     <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
         <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
             ⏱️ Temps d'Attente Moyen par Attraction
@@ -87,7 +116,6 @@ ob_start();
                 <?php foreach ($attractions_stats as $att): ?>
                     <?php 
                         $temps = (int)$att['temps_attente_actuel'];
-                        // Échelle visuelle max 120 min pour la barre
                         $pctAttente = min(100, ($temps / 120) * 100);
                         $couleurTemps = $temps > 60 ? 'var(--rose)' : ($temps > 30 ? 'var(--orange)' : 'var(--vert)');
                     ?>
@@ -109,28 +137,46 @@ ob_start();
         <?php endif; ?>
     </div>
 
-    <!-- GRAPHIQUE COMBINÉ : Billets Vendus vs Billets Validés par Jour -->
+    <!-- 5. COMPARATIF : BILLETS VENDUS VS VALIDÉS PAR DATE (AVEC FILTRE) -->
     <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem; margin-top: 2rem;">
         <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
-            📊 Comparatif : Billets Vendus vs Validés par Jour
+            📊 Comparatif : Billets Vendus vs Validés par Date
         </h2>
         
+        <!-- Formulaire de filtre par date -->
+        <form method="GET" action="index.php" style="margin: 1.5rem 0; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <input type="hidden" name="action" value="admin_stats">
+            <label style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">Sélectionner une date :</label>
+            <select name="date_visite" style="padding: 0.6rem; border: 3px solid var(--noir); font-family: var(--police-texte); font-weight: 700; background: #fff;">
+                <option value="">-- Toutes les dates --</option>
+                <?php foreach ($dates_disponibles as $d): ?>
+                    <option value="<?= $d['date_visite'] ?>" <?= (isset($_GET['date_visite']) && $_GET['date_visite'] == $d['date_visite']) ? 'selected' : '' ?>>
+                        <?= date('d/m/Y', strtotime($d['date_visite'])) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="bouton" style="background: var(--cyan); color: var(--noir); margin-top: 0; padding: 0.6rem 1.2rem; font-size: 0.9rem; cursor: pointer;">
+                Filtrer →
+            </button>
+            <?php if (!empty($_GET['date_visite'])): ?>
+                <a href="index.php?action=admin_stats" style="font-weight: 800; text-decoration: underline; color: var(--rose);">Réinitialiser</a>
+            <?php endif; ?>
+        </form>
+
         <div style="display: flex; gap: 1.5rem; justify-content: center; margin: 1rem 0; font-weight: 800; font-size: 0.85rem;">
             <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 15px; height: 15px; background: var(--cyan); border: 2px solid var(--noir); display: inline-block;"></span> Billets Vendus</span>
-            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 15px; height: 15px; background: #ff6b1a; border: 2px solid var(--noir); display: inline-block; border-radius: 50%;"></span> Billets Validés (Entrés)</span>
+            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 15px; height: 15px; background: #ff6b1a; border: 2px solid var(--noir); display: inline-block;"></span> Billets Validés (Entrés)</span>
         </div>
 
         <?php if (!empty($comparatif_jours)): ?>
             <?php 
-                // Trouver la valeur maximale pour l'échelle du graphique (minimum 10 pour éviter division par 0)
                 $maxVal = 10;
                 foreach ($comparatif_jours as $cj) {
                     $maxVal = max($maxVal, (int)$cj['total_vendus'], (int)$cj['total_valides']);
                 }
             ?>
             
-            <!-- Conteneur du graphique en colonnes -->
-            <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 250px; border-bottom: 3px solid var(--noir); border-left: 3px solid var(--noir); padding: 1rem 0.5rem 0 0.5rem; background: #fff; margin-top: 1rem; position: relative; gap: 10px;">
+            <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 250px; border-bottom: 3px solid var(--noir); border-left: 3px solid var(--noir); padding: 1rem 0.5rem 0 0.5rem; background: #fff; margin-top: 1rem; position: relative; gap: 10px; overflow-x: auto;">
                 
                 <?php foreach ($comparatif_jours as $cj): ?>
                     <?php 
@@ -139,25 +185,21 @@ ob_start();
                         $hauteurVendus = ($vendus / $maxVal) * 100;
                         $hauteurValides = ($valides / $maxVal) * 100;
                     ?>
-                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; position: relative;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 60px; height: 100%; justify-content: flex-end; position: relative;">
                         
-                        <!-- Groupe de barres pour le jour -->
                         <div style="display: flex; align-items: flex-end; gap: 4px; width: 100%; height: 100%; justify-content: center; position: relative;">
                             
-                            <!-- Barre Billets Vendus (Cyan) -->
-                            <div title="Vendus : <?= $vendus ?>" style="width: 45%; height: <?= $hauteurVendus ?>%; background: var(--cyan); border: 2px solid var(--noir); position: relative; transition: height 0.3s;">
+                            <div title="Vendus : <?= $vendus ?>" style="width: 45%; height: <?= $hauteurVendus ?>%; background: var(--cyan); border: 2px solid var(--noir); position: relative;">
                                 <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 900;"><?= $vendus ?></span>
                             </div>
 
-                            <!-- Barre / Point Billets Validés (Orange) -->
-                            <div title="Validés : <?= $valides ?>" style="width: 45%; height: <?= $hauteurValides ?>%; background: #ff6b1a; border: 2px solid var(--noir); position: relative; transition: height 0.3s;">
+                            <div title="Validés : <?= $valides ?>" style="width: 45%; height: <?= $hauteurValides ?>%; background: #ff6b1a; border: 2px solid var(--noir); position: relative;">
                                 <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 900; color: #ff6b1a;"><?= $valides ?></span>
                             </div>
                         </div>
 
-                        <!-- Légende de la date en bas -->
                         <div style="margin-top: 8px; font-size: 0.75rem; font-weight: 800; transform: rotate(-20deg); white-space: nowrap;">
-                            <?= date('d/m', strtotime($cj['date_visite'])) ?>
+                            <?= date('d/m/Y', strtotime($cj['date_visite'])) ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -165,7 +207,7 @@ ob_start();
             </div>
         <?php else: ?>
             <p style="font-weight: 700; text-align: center; padding: 2rem; background: #fff; border: 2px dashed var(--noir); margin-top: 1rem;">
-                Aucune donnée comparative disponible pour le moment.
+                Aucune donnée comparative disponible pour la date sélectionnée.
             </p>
         <?php endif; ?>
     </div>

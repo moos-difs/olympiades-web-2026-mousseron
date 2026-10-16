@@ -134,4 +134,30 @@ class BilletterieModel {
         ");
         return $stmt->fetchAll();
     }
+
+    /**
+     * Calcule le prix dynamique basé sur les places restantes (Capacité max : 2000 places)
+     */
+    public function getPrixDynamiqueParPlacesRestantes($tarif_id, $prix_de_base, $date_visite) {
+        $capaciteMax = 2000;
+        $dejaVendus = $this->getNombreBilletsVendusPourDate($date_visite);
+        $placesRestantes = max(0, $capaciteMax - $dejaVendus);
+
+        // Règle d'augmentation selon la rareté :
+        // - S'il reste plus de 500 places : Prix normal (multiplicateur 1.0)
+        // - Entre 201 et 500 places restantes : +20% (multiplicateur 1.2)
+        // - Entre 51 et 200 places restantes : +40% (multiplicateur 1.4)
+        // - 50 places restantes ou moins (les dernières) : +75% (multiplicateur 1.75)
+        
+        $multiplicateur = 1.0;
+        if ($placesRestantes <= 50) {
+            $multiplicateur = 1.75; // Les 50 dernières places coûtent beaucoup plus cher
+        } elseif ($placesRestantes <= 200) {
+            $multiplicateur = 1.40;
+        } elseif ($placesRestantes <= 500) {
+            $multiplicateur = 1.20;
+        }
+
+        return round($prix_de_base * $multiplicateur, 2);
+    }
 }

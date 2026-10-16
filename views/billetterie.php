@@ -20,7 +20,8 @@ ob_start();
         <!-- Choix de la date -->
         <div>
             <label style="display: block; font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; font-size: 1rem;">1. Choisissez la date de votre visite :</label>
-            <input type="date" name="date_visite" id="date_visite" min="<?= $today ?>" value="<?= $today ?>" required style="width: 100%; padding: 0.8rem; border: 3px solid var(--noir); font-family: var(--police-texte); font-weight: 700; font-size: 1.1rem; background: var(--cyan);">
+            <!-- Ajout de onchange pour actualiser les prix de la page à chaque changement de date -->
+            <input type="date" name="date_visite" id="date_visite" min="<?= $today ?>" value="<?= htmlspecialchars($date_visite ?? $today) ?>" onchange="changerDateVisite(this.value)" required style="width: 100%; padding: 0.8rem; border: 3px solid var(--noir); font-family: var(--police-texte); font-weight: 700; font-size: 1.1rem; background: var(--cyan);">
         </div>
 
         <!-- Choix des billets -->
@@ -105,6 +106,11 @@ function calculerTotalFront() {
     });
     
     affichageTotal.textContent = total.toFixed(2).replace('.', ',') + ' €';
+}
+
+function changerDateVisite(dateStr) {
+    // Recharge la page de la billetterie en passant la nouvelle date dans l'URL
+    window.location.href = 'index.php?action=billetterie&date_visite=' + dateStr;
 }
 </script>
 
