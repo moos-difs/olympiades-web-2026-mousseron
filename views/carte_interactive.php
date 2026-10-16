@@ -99,7 +99,7 @@ function ouvrirFicheParId(id) {
             📐 <strong>Description :</strong> ${att.description}
         </div>
         <div style="margin-top: 1.5rem; text-align: right;">
-            <a href="index.php?action=attraction_detail&id=${att.id}" style="background: var(--cyan); color: var(--noir); padding: 0.6rem 1.2rem; border: 3px solid var(--noir); font-weight: 900; text-decoration: none; box-shadow: 4px 4px 0 var(--noir); display: inline-block; text-transform: uppercase;">
+            <a href="index.php?action=detail&id=${att.id}" style="background: var(--cyan); color: var(--noir); padding: 0.6rem 1.2rem; border: 3px solid var(--noir); font-weight: 900; text-decoration: none; box-shadow: 4px 4px 0 var(--noir); display: inline-block; text-transform: uppercase;">
                 Voir la fiche complète →
             </a>
         </div>

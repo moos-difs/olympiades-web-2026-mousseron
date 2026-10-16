@@ -38,7 +38,7 @@ ob_start();
                     <td style="padding: 0.8rem; border: 2px solid var(--noir); font-weight: bold;"><?= number_format($r['prix_total'], 2, ',', ' ') ?> €</td>
                     <td style="padding: 0.8rem; border: 2px solid var(--noir); font-size: 0.9rem;"><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?></td>
                     <td style="padding: 0.8rem; border: 2px solid var(--noir); text-align: center;">
-                        <a href="index.php?action=admin_voir_mail&id=<?= $r['id'] ?>" target="_blank" style="background: var(--cyan); color: var(--noir); padding: 0.3rem 0.6rem; border: 2px solid var(--noir); font-weight: 700; font-size: 0.85rem; text-decoration: none;">📄 Voir le mail</a>
+                        <a href="index.php?action=voir_mail&id=<?= $r['id'] ?>" target="_blank" style="background: var(--cyan); color: var(--noir); padding: 0.3rem 0.6rem; border: 2px solid var(--noir); font-weight: 700; font-size: 0.85rem; text-decoration: none;">📄 Voir le mail</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
