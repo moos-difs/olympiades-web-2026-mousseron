@@ -18,7 +18,7 @@ Avant de lancer le projet, assurez-vous d'avoir installé sur votre machine :
    composer install
 3. **Installer les dépendances Python (nécessaires pour le script de simulation mysql-connector-python)** :
     ```bash
-    pip install mysql-connector-python requests
+    pip install mysql-connector-python requests websocket-client
 4. **Importer la base de données MySQL via phpMyAdmin (database.sql).**
 
 ## ⚙️ 2. Configuration (`.env`)
