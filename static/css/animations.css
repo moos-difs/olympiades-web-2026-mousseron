@@ -1,0 +1,150 @@
+/* ==========================================================================
+   ANIMATIONS & INTERACTIONS DINAMIQUES - STUDIO TOON (STYLE BD/BRUTALISME)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. KEYFRAMES (Définition des mouvements)
+   -------------------------------------------------------------------------- */
+
+/* Apparition fluide depuis le bas avec léger dépassement (effet ressort) */
+@keyframes toonFadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(25px) scale(0.98);
+    }
+    70% {
+        transform: translateY(-3px) scale(1.01);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Rebond Cartoon pour le badge numéroté au survol */
+@keyframes toonBounce {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+    }
+    40% {
+        transform: scale(1.25) rotate(-8deg);
+    }
+    70% {
+        transform: scale(0.95) rotate(4deg);
+    }
+}
+
+/* Pulse discret pour attirer le regard sur le bouton principal */
+@keyframes toonPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   2. EN-TÊTES ET TITRES STYLE BD
+   -------------------------------------------------------------------------- */
+
+/* Légère inclinaison du titre principal pour le style Cartoon */
+.page-entete h1 {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.page-entete:hover h1 {
+    transform: rotate(-1.5deg) scale(1.02);
+}
+
+/* --------------------------------------------------------------------------
+   3. ANIMATION DE LA LISTE D'ATTRACTIONS (Cascade / Stagger)
+   -------------------------------------------------------------------------- */
+
+/* Apparition progressive des cartes lors du chargement de la page */
+.page-entete + div .carte-interactive,
+div[style*="display: flex; flex-direction: column"] > div {
+    animation: toonFadeInUp 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* Décalage temporel (delay) pour chaque carte de la liste */
+div[style*="display: flex; flex-direction: column"] > div:nth-child(1) { animation-delay: 0.05s; }
+div[style*="display: flex; flex-direction: column"] > div:nth-child(2) { animation-delay: 0.12s; }
+div[style*="display: flex; flex-direction: column"] > div:nth-child(3) { animation-delay: 0.19s; }
+div[style*="display: flex; flex-direction: column"] > div:nth-child(4) { animation-delay: 0.26s; }
+div[style*="display: flex; flex-direction: column"] > div:nth-child(5) { animation-delay: 0.33s; }
+
+/* --------------------------------------------------------------------------
+   4. INTERACTION SUR LES CARTES D'ATTRACTION
+   -------------------------------------------------------------------------- */
+
+/* Survol de la carte globale */
+div[style*="box-shadow: 4px 4px 0 var(--noir)"] {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.2s ease, 
+                border-color 0.2s ease;
+}
+
+/* Effet d'élévation "Pop" au survol de la carte */
+div[style*="background: #fff"][style*="border: 3px solid var(--noir)"]:hover {
+    transform: translateY(-4px) translateX(-2px);
+    box-shadow: 8px 8px 0 var(--noir) !important;
+}
+
+/* Déclenchement de l'animation du badge numéro au survol de la carte parent */
+div[style*="background: #fff"]:hover div[style*="background: var(--violet)"] {
+    animation: toonBounce 0.5s ease forwards;
+    background: var(--cyan) !important;
+    color: var(--noir) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. BOUTONS, LIENS & INPUTS (Effet clic physique BD)
+   -------------------------------------------------------------------------- */
+
+/* Style de base pour les boutons et liens d'action */
+button, 
+a[style*="box-shadow"], 
+input[type="number"],
+.btn-toon {
+    transition: transform 0.15s ease, 
+                box-shadow 0.15s ease, 
+                background-color 0.2s ease !important;
+}
+
+/* Hover : Le bouton se soulève */
+button:hover, 
+a[style*="box-shadow"]:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 var(--noir) !important;
+}
+
+/* Active (Clic enfoncé) : Effet bouton qu'on presse */
+button:active, 
+a[style*="box-shadow"]:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--noir) !important;
+}
+
+/* Focus sur le champ de saisie de la taille */
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--violet) !important;
+    box-shadow: 4px 4px 0 var(--noir) !important;
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   6. BADGES INFORMATIFS (Temps d'attente, Taille)
+   -------------------------------------------------------------------------- */
+
+/* Animation légère sur les pillules d'infos au survol */
+span[style*="border: 2px solid var(--noir)"] {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+span[style*="border: 2px solid var(--noir)"]:hover {
+    transform: scale(1.08) rotate(-1deg);
+}
