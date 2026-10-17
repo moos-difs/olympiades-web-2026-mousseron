@@ -112,4 +112,20 @@ class AttractionModel {
         ");
         return $stmt->execute([$adminId, $action, $details]);
     }
+
+    /**
+     * Récupère la liste des 100 derniers logs d'audit administrateur.
+     * 
+     * @return array Liste des logs triée du plus récent au plus ancien
+     */
+    public function getTousLesLogs(): array {
+        $stmt = $this->db->query("
+            SELECT l.*, u.nom AS admin_nom, u.email AS admin_email 
+            FROM admin_logs l 
+            LEFT JOIN utilisateurs u ON l.admin_id = u.id 
+            ORDER BY l.created_at DESC 
+            LIMIT 100
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

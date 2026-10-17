@@ -241,4 +241,18 @@ class AttractionController {
 
         require_once __DIR__ . '/../views/planificateur.php';
     }
+
+    /**
+     * Affiche le journal d'audit de toutes les actions administrateur.
+     */
+    public function adminLogs() {
+        // 1. Contrôle d'accès strict
+        $this->checkAdmin();
+
+        // 2. Récupération des logs depuis la base de données
+        $logs = $this->model->getTousLesLogs();
+
+        // 3. Inclusion de la vue dédiée
+        require_once __DIR__ . '/../views/admin_logs.php';
+    }
 }

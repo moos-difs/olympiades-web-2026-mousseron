@@ -77,6 +77,9 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="index.php?action=admin_stats">
                 <span class="entete__nav-num">07</span>Statistiques
             </a>
+            <a href="index.php?action=admin_logs">
+                <span class="entete__nav-num">08</span>Logs
+            </a>
         <?php else : ?>
             <a href="index.php?action=carte">
                 <span class="entete__nav-num">06</span>Carte intéractive

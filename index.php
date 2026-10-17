@@ -178,6 +178,10 @@ switch ($action) {
         $statsController->index();
         break;
 
+    case 'admin_logs':
+        $attractionController->adminLogs();
+        break;
+    
     // ==========================================
     // 6. API EXTERNE & ERREURS
     // ==========================================
