@@ -17,7 +17,7 @@ ob_start();
             <h1>📜 Journal d'Audit Administrateur</h1>
             <p class="page-entete__intro">Suivi en temps réel de toutes les opérations critiques effectuées par les administrateurs du parc.</p>
         </div>
-        <a href="index.php?action=admin_dashboard" class="bouton">
+        <a href="index.php?action=accueil" class="bouton">
             ⬅ Tableau de bord
         </a>
     </div>
