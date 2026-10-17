@@ -1,216 +1,234 @@
 <?php 
+/**
+ * Vue : Analytics & Performances (Statistiques Admin)
+ * Tableau de bord d'analyse du chiffre d'affaires, des billets vendus vs restants,
+ * des temps d'attente moyens et du comparatif d'accès au parc.
+ */
+
 $pageTitle = "Statistiques - Studio Toon";
 ob_start(); 
 ?>
-
-<!-- En-tête -->
-<div class="page-entete" style="max-width: 1000px; margin: 0 auto 2rem auto; background: var(--violet); color: #fff; border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+<link rel="stylesheet" href="static/css/pages/admin_stats_index.css">
+<!-- En-tête de la page Analytics -->
+<div id="entete-stats" class="page-entete">
+    <div class="entete-stats-flex">
         <div>
-            <h1 style="color: #fff; font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; margin: 0; font-size: 2rem;">📈 Analytics & Performances</h1>
-            <p class="page-entete__intro" style="color: #fff; margin: 0.5rem 0 0; font-weight: 700;">Suivi détaillé des ventes, du chiffre d'affaires journalier et des temps d'attente.</p>
+            <h1 class="titre-stats">📈 Analytics & Performances</h1>
+            <p class="page-entete__intro intro-stats">
+                Suivi détaillé des ventes, du chiffre d'affaires journalier et des temps d'attente.
+            </p>
         </div>
         <div>
-            <a href="index.php?action=accueil" style="background: var(--cyan); color: var(--noir); padding: 0.8rem 1.2rem; border: 3px solid var(--noir); font-weight: 900; text-decoration: none; box-shadow: 4px 4px 0 var(--noir); display: inline-block; text-transform: uppercase;">
+            <a href="index.php?action=accueil" class="bouton-retour-accueil">
                 ← Accueil
             </a>
         </div>
     </div>
 </div>
 
-<div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 2.5rem;">
+<div id="conteneur-stats-dashboard">
 
-    <!-- 1. CHIFFRE D'AFFAIRES GLOBAL & Kpis -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
-        <div style="background: var(--vert); border: 4px solid var(--noir); box-shadow: 6px 6px 0 var(--noir); padding: 1.8rem;">
-            <span style="font-size: 0.8rem; font-weight: 900; text-transform: uppercase; background: var(--noir); color: #fff; padding: 3px 8px;">Chiffre d'affaires Global</span>
-            <div style="font-family: 'Archivo Black', Impact, sans-serif; font-size: 2.8rem; color: var(--noir); margin-top: 1rem;">
+    <!-- 1. CHIFFRE D'AFFAIRES GLOBAL & KPIS -->
+    <section class="grille-kpis">
+        <div class="carte-kpi kpi-ca">
+            <span class="badge-kpi-titre">Chiffre d'affaires Global</span>
+            <div class="valeur-kpi">
                 <?= number_format($kpis['chiffre_affaires'] ?? 0, 2, ',', ' ') ?> €
             </div>
-            <p style="margin: 0.5rem 0 0; font-weight: 700; font-size: 0.9rem;">Recettes cumulées du parc</p>
+            <p class="description-kpi">Recettes cumulées du parc</p>
         </div>
 
-        <div style="background: var(--cyan); border: 4px solid var(--noir); box-shadow: 6px 6px 0 var(--noir); padding: 1.8rem;">
-            <span style="font-size: 0.8rem; font-weight: 900; text-transform: uppercase; background: var(--noir); color: #fff; padding: 3px 8px;">Total Billets Vendus</span>
-            <div style="font-family: 'Archivo Black', Impact, sans-serif; font-size: 2.8rem; color: var(--noir); margin-top: 1rem;">
-                <?= $kpis['total_billets'] ?? '0' ?> places
+        <div class="carte-kpi kpi-billets">
+            <span class="badge-kpi-titre">Total Billets Vendus</span>
+            <div class="valeur-kpi">
+                <?= htmlspecialchars($kpis['total_billets'] ?? '0') ?> places
             </div>
-            <p style="margin: 0.5rem 0 0; font-weight: 700; font-size: 0.9rem;">Volume global de réservations</p>
+            <p class="description-kpi">Volume global de réservations</p>
         </div>
-    </div>
+    </section>
 
     <!-- 2. BILLETS RESTANTS À VENDRE PAR JOUR (Jauge 2000 places) -->
-    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
-        <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
+    <section class="carte-section-stats">
+        <h2 class="titre-section-stats">
             🎟️ Places Restantes par Jour (Jauge max : 2000)
         </h2>
 
         <?php if (!empty($billets_restants)): ?>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            <div class="grille-places-restantes">
                 <?php foreach ($billets_restants as $b): ?>
                     <?php 
-                        $restants = (int)$b['total_restants'];
-                        $couleurStock = $restants < 100 ? 'var(--rose)' : ($restants < 500 ? 'var(--orange)' : 'var(--vert)');
+                        $restants = (int)($b['total_restants'] ?? 0);
+                        $couleurStockClass = $restants < 100 ? 'stock-critique' : ($restants < 500 ? 'stock-moyen' : 'stock-bon');
                     ?>
-                    <div style="background: #fff; border: 3px solid var(--noir); padding: 1rem; box-shadow: 4px 4px 0 var(--noir);">
-                        <div style="font-weight: 900; font-size: 0.95rem; margin-bottom: 5px;">🗓️ <?= date('d/m/Y', strtotime($b['date_visite'])) ?></div>
-                        <div style="font-size: 1.5rem; font-weight: 900; color: <?= $couleurStock ?>;">
+                    <div class="carte-place-jour">
+                        <div class="date-place-jour">
+                            🗓️ <?= date('d/m/Y', strtotime($b['date_visite'])) ?>
+                        </div>
+                        <div class="valeur-places-restantes <?= $couleurStockClass ?>">
                             <?= $restants ?> places
                         </div>
-                        <div style="font-size: 0.8rem; font-weight: 700; color: #666; margin-top: 5px;">
-                            (<?= $b['total_vendus'] ?> vendus / 2000)
+                        <div class="detail-places-vendues">
+                            (<?= htmlspecialchars($b['total_vendus'] ?? 0) ?> vendus / 2000)
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p style="font-weight: 700; text-align: center; padding: 1.5rem; background: #fff; border: 2px dashed var(--noir);">
+            <p class="message-bloc-vide">
                 Aucune réservation enregistrée pour calculer les stocks restants.
             </p>
         <?php endif; ?>
-    </div>
+    </section>
 
-    <!-- 3. GRAPHIQUE : BILLETS VENDUS ET CA PAR JOUR -->
-    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
-        <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
+    <!-- 3. GRAPHIQUE / BARRES : BILLETS VENDUS ET CA PAR JOUR -->
+    <section class="carte-section-stats">
+        <h2 class="titre-section-stats">
             📅 Billets & Chiffre d'Affaires par Jour de Visite
         </h2>
 
         <?php if (!empty($ventes_jour)): ?>
-            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="liste-ventes-journalieres">
                 <?php foreach ($ventes_jour as $ligne): ?>
                     <?php 
-                        $billets = (int)$ligne['total_billets_jour'];
-                        $caJour = (float)$ligne['ca_jour'];
+                        $billets = (int)($ligne['total_billets_jour'] ?? 0);
+                        $caJour = (float)($ligne['ca_jour'] ?? 0);
                         $pct = min(100, ($billets / 500) * 100);
                     ?>
-                    <div style="background: #fff; border: 2px solid var(--noir); padding: 1rem; box-shadow: 4px 4px 0 var(--noir);">
-                        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 1rem; margin-bottom: 8px;">
+                    <div class="carte-vente-jour">
+                        <div class="entete-vente-jour">
                             <span>🗓️ <?= date('d/m/Y', strtotime($ligne['date_visite'])) ?></span>
-                            <span style="color: var(--violet);"><?= number_format($caJour, 2, ',', ' ') ?> €</span>
+                            <span class="montant-ca-jour"><?= number_format($caJour, 2, ',', ' ') ?> €</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">
+                        <div class="volume-billets-jour">
                             <span>Volume : <strong><?= $billets ?></strong> billets</span>
                         </div>
-                        <div style="background: #eee; border: 2px solid var(--noir); width: 100%; height: 18px;">
-                            <div style="background: var(--orange); width: <?= $pct ?>%; height: 100%; border-right: 2px solid var(--noir);"></div>
+                        <div class="barre-progression-fond">
+                            <div class="barre-progression-remplissage" style="width: <?= $pct ?>%;"></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p style="font-weight: 700; text-align: center; padding: 2rem; background: #fff; border: 2px dashed var(--noir);">
+            <p class="message-bloc-vide">
                 Aucune donnée journalière disponible.
             </p>
         <?php endif; ?>
-    </div>
+    </section>
 
     <!-- 4. TEMPS D'ATTENTE MOYEN PAR ATTRACTION -->
-    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem;">
-        <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
+    <section class="carte-section-stats">
+        <h2 class="titre-section-stats">
             ⏱️ Temps d'Attente Moyen par Attraction
         </h2>
 
         <?php if (!empty($attractions_stats)): ?>
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+            <div class="liste-attractions-stats">
                 <?php foreach ($attractions_stats as $att): ?>
                     <?php 
-                        $temps = (int)$att['temps_attente_actuel'];
+                        $temps = (int)($att['temps_attente_actuel'] ?? 0);
                         $pctAttente = min(100, ($temps / 120) * 100);
-                        $couleurTemps = $temps > 60 ? 'var(--rose)' : ($temps > 30 ? 'var(--orange)' : 'var(--vert)');
+                        $couleurTempsClass = $temps > 60 ? 'temps-long' : ($temps > 30 ? 'temps-moyen' : 'temps-court');
                     ?>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 0.9rem; margin-bottom: 3px;">
-                            <span><?= htmlspecialchars($att['nom']) ?></span>
+                    <div class="ligne-attraction-stat">
+                        <div class="entete-attraction-stat">
+                            <span><?= htmlspecialchars($att['nom'] ?? '') ?></span>
                             <span><?= $temps ?> minutes</span>
                         </div>
-                        <div style="background: #fff; border: 2px solid var(--noir); width: 100%; height: 20px; box-shadow: 3px 3px 0 var(--noir);">
-                            <div style="background: <?= $couleurTemps ?>; width: <?= $pctAttente ?>%; height: 100%;"></div>
+                        <div class="barre-attente-fond">
+                            <div class="barre-attente-remplissage <?= $couleurTempsClass ?>" style="width: <?= $pctAttente ?>%;"></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p style="font-weight: 700; text-align: center; padding: 1.5rem; background: #fff; border: 2px dashed var(--noir);">
+            <p class="message-bloc-vide">
                 Aucune attraction enregistrée.
             </p>
         <?php endif; ?>
-    </div>
+    </section>
 
     <!-- 5. COMPARATIF : BILLETS VENDUS VS VALIDÉS PAR DATE (AVEC FILTRE) -->
-    <div style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2rem; margin-top: 2rem;">
-        <h2 style="font-family: 'Archivo Black', Impact, sans-serif; text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 3px solid var(--noir); padding-bottom: 10px;">
+    <section class="carte-section-stats espace-haut-stats">
+        <h2 class="titre-section-stats">
             📊 Comparatif : Billets Vendus vs Validés par Date
         </h2>
         
         <!-- Formulaire de filtre par date -->
-        <form method="GET" action="index.php" style="margin: 1.5rem 0; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <form method="GET" action="index.php" class="formulaire-filtre-stats">
             <input type="hidden" name="action" value="admin_stats">
-            <label style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">Sélectionner une date :</label>
-            <select name="date_visite" style="padding: 0.6rem; border: 3px solid var(--noir); font-family: var(--police-texte); font-weight: 700; background: #fff;">
+            
+            <label for="select-date-visite" class="label-filtre-date">Sélectionner une date :</label>
+            <select name="date_visite" id="select-date-visite" class="select-filtre-date">
                 <option value="">-- Toutes les dates --</option>
-                <?php foreach ($dates_disponibles as $d): ?>
-                    <option value="<?= $d['date_visite'] ?>" <?= (isset($_GET['date_visite']) && $_GET['date_visite'] == $d['date_visite']) ? 'selected' : '' ?>>
-                        <?= date('d/m/Y', strtotime($d['date_visite'])) ?>
-                    </option>
-                <?php endforeach; ?>
+                <?php if (!empty($dates_disponibles)): ?>
+                    <?php foreach ($dates_disponibles as $d): ?>
+                        <option value="<?= htmlspecialchars($d['date_visite']) ?>" <?= (isset($_GET['date_visite']) && $_GET['date_visite'] == $d['date_visite']) ? 'selected' : '' ?>>
+                            <?= date('d/m/Y', strtotime($d['date_visite'])) ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </select>
-            <button type="submit" class="bouton" style="background: var(--cyan); color: var(--noir); margin-top: 0; padding: 0.6rem 1.2rem; font-size: 0.9rem; cursor: pointer;">
+
+            <button type="submit" class="bouton bouton-filtrer-stats">
                 Filtrer →
             </button>
+
             <?php if (!empty($_GET['date_visite'])): ?>
-                <a href="index.php?action=admin_stats" style="font-weight: 800; text-decoration: underline; color: var(--rose);">Réinitialiser</a>
+                <a href="index.php?action=admin_stats" class="lien-reset-filtre">Réinitialiser</a>
             <?php endif; ?>
         </form>
 
-        <div style="display: flex; gap: 1.5rem; justify-content: center; margin: 1rem 0; font-weight: 800; font-size: 0.85rem;">
-            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 15px; height: 15px; background: var(--cyan); border: 2px solid var(--noir); display: inline-block;"></span> Billets Vendus</span>
-            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 15px; height: 15px; background: #ff6b1a; border: 2px solid var(--noir); display: inline-block;"></span> Billets Validés (Entrés)</span>
+        <!-- Légende du graphique -->
+        <div class="legende-graphique-comparatif">
+            <span class="element-legende">
+                <span class="carre-legende carre-vendus"></span> Billets Vendus
+            </span>
+            <span class="element-legende">
+                <span class="carre-legende carre-valides"></span> Billets Validés (Entrés)
+            </span>
         </div>
 
         <?php if (!empty($comparatif_jours)): ?>
             <?php 
                 $maxVal = 10;
                 foreach ($comparatif_jours as $cj) {
-                    $maxVal = max($maxVal, (int)$cj['total_vendus'], (int)$cj['total_valides']);
+                    $maxVal = max($maxVal, (int)($cj['total_vendus'] ?? 0), (int)($cj['total_valides'] ?? 0));
                 }
             ?>
             
-            <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 250px; border-bottom: 3px solid var(--noir); border-left: 3px solid var(--noir); padding: 1rem 0.5rem 0 0.5rem; background: #fff; margin-top: 1rem; position: relative; gap: 10px; overflow-x: auto;">
-                
+            <!-- Graphique en bâtons comparatif -->
+            <div class="conteneur-graphique-batons">
                 <?php foreach ($comparatif_jours as $cj): ?>
                     <?php 
-                        $vendus = (int)$cj['total_vendus'];
-                        $valides = (int)$cj['total_valides'];
+                        $vendus = (int)($cj['total_vendus'] ?? 0);
+                        $valides = (int)($cj['total_valides'] ?? 0);
                         $hauteurVendus = ($vendus / $maxVal) * 100;
                         $hauteurValides = ($valides / $maxVal) * 100;
                     ?>
-                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 60px; height: 100%; justify-content: flex-end; position: relative;">
-                        
-                        <div style="display: flex; align-items: flex-end; gap: 4px; width: 100%; height: 100%; justify-content: center; position: relative;">
-                            
-                            <div title="Vendus : <?= $vendus ?>" style="width: 45%; height: <?= $hauteurVendus ?>%; background: var(--cyan); border: 2px solid var(--noir); position: relative;">
-                                <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 900;"><?= $vendus ?></span>
+                    <div class="colonne-comparative">
+                        <div class="batons-flex-container">
+                            <!-- Bâton des billets vendus -->
+                            <div title="Vendus : <?= $vendus ?>" class="baton-graphique baton-vendus" style="height: <?= $hauteurVendus ?>%;">
+                                <span class="valeur-baton-top"><?= $vendus ?></span>
                             </div>
-
-                            <div title="Validés : <?= $valides ?>" style="width: 45%; height: <?= $hauteurValides ?>%; background: #ff6b1a; border: 2px solid var(--noir); position: relative;">
-                                <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 900; color: #ff6b1a;"><?= $valides ?></span>
+                            <!-- Bâton des billets validés -->
+                            <div title="Validés : <?= $valides ?>" class="baton-graphique baton-valides" style="height: <?= $hauteurValides ?>%;">
+                                <span class="valeur-baton-top couleur-texte-valides"><?= $valides ?></span>
                             </div>
                         </div>
 
-                        <div style="margin-top: 8px; font-size: 0.75rem; font-weight: 800; transform: rotate(-20deg); white-space: nowrap;">
+                        <div class="etiquette-date-graphique">
                             <?= date('d/m/Y', strtotime($cj['date_visite'])) ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
-
             </div>
         <?php else: ?>
-            <p style="font-weight: 700; text-align: center; padding: 2rem; background: #fff; border: 2px dashed var(--noir); margin-top: 1rem;">
+            <p class="message-bloc-vide marge-haut-vide">
                 Aucune donnée comparative disponible pour la date sélectionnée.
             </p>
         <?php endif; ?>
-    </div>
+    </section>
 
 </div>
 

@@ -1,15 +1,29 @@
-<?php
+<?php 
+/**
+ * Vue : Page d'Erreur (Oups)
+ * Page affichée lorsqu'une erreur survient (page introuvable, action invalide, etc.).
+ */
+
 $pageTitle = "Oups - Studio Toon";
-ob_start();
+ob_start(); 
 ?>
-    <div class="fiche-veille" style="background: var(--rose); text-align: center; padding: 4rem 2rem;">
-        <h2 style="font-size: 3rem; margin-bottom: 1rem;">OUPSSSSS !</h2>
-        <p style="font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 2rem;">
-            <?= isset($message_erreur) ? htmlspecialchars($message_erreur) : "Une erreur est survenue." ?>
-        </p>
-        <a href="index.php?action=attractions" class="bouton" style="background: var(--noir); color: #fff;">Voir les attractions disponibles →</a>
+<link rel="stylesheet" href="static/css/pages/error.css">
+<!-- Carte principale d'erreur -->
+<div id="carte-erreur" class="fiche-veille">
+    <h2 class="titre-erreur">OUPSSSSS !</h2>
+    
+    <p class="texte-erreur">
+        <?= isset($message_erreur) ? htmlspecialchars($message_erreur) : "Une erreur est survenue." ?>
+    </p>
+
+    <div class="actions-erreur">
+        <a href="index.php?action=attractions" id="bouton-vers-attractions" class="bouton">
+            Voir les attractions disponibles →
+        </a>
     </div>
-<?php
+</div>
+
+<?php 
 $content = ob_get_clean();
 require 'views/base.php';
 ?>

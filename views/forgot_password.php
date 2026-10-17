@@ -1,62 +1,67 @@
 <?php 
+/**
+ * Vue : Mot de passe oublié
+ * Permet à un utilisateur de saisir son adresse e-mail pour recevoir un lien de réinitialisation.
+ */
+
 $pageTitle = "Mot de passe oublié - Studio Toon";
 ob_start(); 
 ?>
-
-<div class="page-entete" style="max-width: 500px; margin: 0 auto 2rem auto; background: var(--violet); color: #fff;">
-    <h1 style="color: #fff;">🔑 Mot de passe oublié ?</h1>
-    <p class="page-entete__intro" style="color: #fff;">Pas de panique ! Saisis ton e-mail et on t'envoie un lien de réinitialisation.</p>
+<link rel="stylesheet" href="static/css/pages/forgot_password.css">
+<!-- En-tête de la page -->
+<div id="entete-mdp-oublie" class="page-entete">
+    <h1>🔑 Mot de passe oublié ?</h1>
+    <p class="page-entete__intro">Pas de panique ! Saisis ton e-mail et on t'envoie un lien de réinitialisation.</p>
 </div>
 
-<div style="max-width: 500px; margin: 0 auto; background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 2.5rem;">
+<!-- Conteneur principal -->
+<div id="conteneur-mdp-oublie">
 
-    <!-- Affichage des messages de confirmation ou d'erreur -->
+    <!-- Affichage du message de succès et du lien de test (mode dev) -->
     <?php if (isset($message_succes)): ?>
-    <div style="background: var(--vert); color: var(--noir); border: 3px solid var(--noir); padding: 1rem; margin-bottom: 1.5rem; font-weight: 800; box-shadow: 4px 4px 0 var(--noir);">
-        ✅ <?= htmlspecialchars($message_succes) ?>
-        <br><br>
-        <a href="mails/email_reset_password.php?token=<?= urlencode($token_genere) ?>" target="_blank" style="background: var(--noir); color: #fff; padding: 0.4rem 0.8rem; text-decoration: none; display: inline-block;">
-            📩 Voir le mail généré !
-        </a>
-    </div>
-<?php endif; ?>
+        <div id="alerte-succes-mdp" class="alerte-succes">
+            ✅ <?= htmlspecialchars($message_succes) ?>
+            <br><br>
+            <a href="mails/email_reset_password.php?token=<?= urlencode($token_genere ?? '') ?>" target="_blank" class="bouton-voir-mail">
+                📩 Voir le mail généré !
+            </a>
+        </div>
+    <?php endif; ?>
 
+    <!-- Affichage du message d'erreur -->
     <?php if (isset($message_erreur)): ?>
-        <div style="background: var(--rose); color: #fff; border: 3px solid var(--noir); padding: 1rem; margin-bottom: 1.5rem; font-weight: 800; box-shadow: 4px 4px 0 var(--noir);">
+        <div id="alerte-erreur-mdp" class="alerte-erreur">
             ❌ <?= htmlspecialchars($message_erreur) ?>
         </div>
     <?php endif; ?>
 
-    <!-- Formulaire d'envoi -->
-    <form action="index.php?action=traiter_mdp_oublie" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <div>
-            <label for="email" style="display: block; font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; font-size: 0.9rem;">
+    <!-- Formulaire d'envoi de la demande -->
+    <form id="formulaire-mdp-oublie" action="index.php?action=traiter_mdp_oublie" method="POST">
+        <div class="champ-formulaire">
+            <label for="champ-email-oublie">
                 Adresse e-mail de ton compte :
             </label>
             <input 
                 type="email" 
-                id="email" 
+                id="champ-email-oublie" 
                 name="email" 
                 placeholder="charlie@studiotoon.fr" 
                 required 
                 autofocus
-                style="width: 100%; padding: 0.8rem 1rem; border: 3px solid var(--noir); font-weight: 700; font-size: 1rem; background: #fff; box-sizing: border-box;"
+                autocomplete="email"
             >
         </div>
 
-        <button 
-            type="submit" 
-            class="bouton" 
-            style="background: var(--cyan); color: var(--noir); width: 100%; padding: 1rem; font-size: 1.1rem; cursor: pointer; text-align: center; border: 3px solid var(--noir); box-shadow: 4px 4px 0 var(--noir); font-weight: 900; text-transform: uppercase;"
-        >
+        <button type="submit" id="bouton-envoyer-mdp" class="bouton">
             Envoyer le lien de secours →
         </button>
     </form>
 
-    <hr style="border: 0; border-top: 3px dashed var(--noir); margin: 2rem 0;">
+    <hr class="separateur-tiret">
 
-    <div style="text-align: center;">
-        <a href="index.php?action=login" style="font-weight: 800; color: var(--noir); text-decoration: underline;">
+    <!-- Lien de retour vers la page de connexion -->
+    <div class="bloc-lien-connexion">
+        <a href="index.php?action=login" class="lien-retour-connexion">
             ← Retour à la page de connexion
         </a>
     </div>

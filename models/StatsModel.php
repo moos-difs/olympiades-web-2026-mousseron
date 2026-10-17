@@ -1,4 +1,10 @@
 <?php
+/**
+ * Modèle : StatsModel
+ * Gère l'ensemble des requêtes d'analyse et de statistiques (KPIs, chiffre d'affaires,
+ * volumes de vente, jauge de remplissage, temps d'attente et suivi des e-billets).
+ */
+
 require_once __DIR__ . '/../config/Database.php';
 
 class StatsModel {
@@ -8,6 +14,9 @@ class StatsModel {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère les indicateurs clés de performance (KPIs) globaux du parc.
+     */
     public function getGlobalKPIs() {
         $stmt = $this->db->query("
             SELECT 
@@ -19,7 +28,9 @@ class StatsModel {
         return $stmt->fetch();
     }
 
-    // --- Billets vendus et CA par jour ---
+    /**
+     * Récupère les billets vendus et le chiffre d'affaires cumulé par jour de visite.
+     */
     public function getVentesEtCaParJour() {
         $stmt = $this->db->query("
             SELECT r.date_visite, 
@@ -34,7 +45,9 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
-    // --- Temps d'attente moyen par attraction ---
+    /**
+     * Récupère le temps d'attente actuel de chaque attraction.
+     */
     public function getTempsAttenteMoyenParAttraction() {
         $stmt = $this->db->query("
             SELECT nom, attente as temps_attente_actuel 
@@ -44,9 +57,10 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
-    // --- Temps d'attente moyen par heure (si tu as une table d'historique des temps d'attente, ou simulation basée sur les plages horaires) ---
+    /**
+     * Récupère la moyenne des temps d'attente regroupés par tranche horaire.
+     */
     public function getTempsAttenteParHeure() {
-        // Exemple basé sur une table de log d'attente ou regroupement par tranche horaire
         $stmt = $this->db->query("
             SELECT HOUR(date_maj) as heure, AVG(temps_attente) as moyenne_attente
             FROM historique_attentes
@@ -56,7 +70,9 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
-    // (Conserve les anciennes méthodes getVentesParTarif, getStatsBilletsScannes, etc. si besoin)
+    /**
+     * Récupère le volume des ventes et le CA ventilé par type de tarif.
+     */
     public function getVentesParTarif() {
         $stmt = $this->db->query("
             SELECT t.libelle, SUM(rb.quantite) as qte_vendue, SUM(rb.quantite * rb.prix_unitaire) as ca_tarif
@@ -68,6 +84,9 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Calcule le nombre de places restantes par jour de visite (basé sur une jauge max de 2000 places).
+     */
     public function getBilletsRestantsParJour() {
         $stmt = $this->db->query("
             SELECT r.date_visite, 
@@ -81,6 +100,10 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Fournit un comparatif entre les billets vendus et les e-billets réellement validés (scannés) à l'entrée.
+     * Accepte un filtre optionnel par date de visite.
+     */
     public function getComparatifVendusVsValidesParDate($date_selectionnee = null) {
         $sql = "
             SELECT r.date_visite, 
@@ -105,6 +128,9 @@ class StatsModel {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère la liste de toutes les dates de visites uniques pour alimenter les listes déroulantes de filtres.
+     */
     public function getDatesVisitesUniques() {
         $stmt = $this->db->query("SELECT DISTINCT date_visite FROM reservations ORDER BY date_visite ASC");
         return $stmt->fetchAll();

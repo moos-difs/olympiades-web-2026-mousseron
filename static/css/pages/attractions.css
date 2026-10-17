@@ -1,0 +1,54 @@
+/* ==========================================
+   PAGE LISTE DES ATTRACTIONS
+   ========================================== */
+
+/* Conteneur des filtres */
+.filtres-univers-container {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+/* Style de base des boutons de filtre */
+.bouton-filtre {
+    margin-top: 0;
+}
+
+/* États actifs ou inactifs des filtres */
+.bouton-filtre-actif {
+    background-color: var(--noir);
+    color: #fff;
+}
+
+.bouton-filtre-tous {
+    background-color: var(--cyan);
+    color: var(--noir);
+}
+
+.bouton-filtre-studio2d {
+    background-color: var(--vert);
+    color: var(--noir);
+}
+
+.bouton-filtre-chapiteau {
+    background-color: var(--orange);
+    color: var(--noir);
+}
+
+/* Badges de statut des attractions */
+.badge-statut-attraction {
+    font-weight: 700;
+}
+
+.statut-ouvert {
+    color: var(--vert);
+}
+
+.statut-maintenance {
+    color: var(--orange);
+}
+
+.statut-ferme, .statut-inconnu {
+    color: var(--rose);
+}

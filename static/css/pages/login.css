@@ -1,0 +1,65 @@
+/* ==========================================
+   PAGE CONNEXION
+   ========================================== */
+
+/* Conteneur principal */
+#page-connexion {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+/* Alerte / Message d'erreur */
+#message-erreur-connexion.alerte-erreur {
+    color: var(--rose);
+    font-weight: bold;
+    background-color: #fff;
+    padding: 0.5rem;
+    border: 2px solid var(--noir);
+}
+
+/* Formulaire */
+#formulaire-connexion {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Champs du formulaire */
+#formulaire-connexion .champ-formulaire label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+#formulaire-connexion .champ-formulaire input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    box-sizing: border-box;
+}
+
+/* Textes d'aide et liens annexes */
+.texte-aide-mdp {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.texte-aide-inscription {
+    margin-top: 1rem;
+}
+
+.lien-rose {
+    color: var(--rose);
+    font-weight: 700;
+}
+
+/* Bouton de soumission */
+#bouton-connexion {
+    background-color: var(--vert);
+    color: var(--noir);
+    cursor: pointer;
+    border: 3px solid var(--noir);
+    box-shadow: 4px 4px 0 var(--noir);
+}

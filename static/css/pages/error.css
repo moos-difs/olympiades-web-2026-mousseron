@@ -1,0 +1,47 @@
+/* ==========================================
+   PAGE ERREUR (OUPS)
+   ========================================== */
+
+/* Carte principale de la page d'erreur */
+#carte-erreur.fiche-veille {
+    background-color: var(--rose);
+    text-align: center;
+    padding: 4rem 2rem;
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    max-width: 600px;
+    margin: 3rem auto;
+}
+
+/* Titre d'erreur principal */
+.titre-erreur {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--noir);
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+}
+
+/* Texte dynamique de l'erreur */
+.texte-erreur {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2rem;
+}
+
+/* Conteneur d'action */
+.actions-erreur {
+    display: flex;
+    justify-content: center;
+}
+
+/* Bouton spécifique de redirection */
+#bouton-vers-attractions {
+    background-color: var(--noir);
+    color: #fff;
+    border: 3px solid var(--noir);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    text-transform: uppercase;
+}

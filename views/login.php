@@ -1,31 +1,68 @@
-<?php
+<?php 
+/**
+ * Vue : Connexion
+ * Permet aux utilisateurs existants de s'identifier pour accéder à leur espace personnel.
+ */
+
 $pageTitle = "Connexion - Studio Toon";
-ob_start();
+ob_start(); 
 ?>
-    <div class="page-entete" style="max-width: 500px; margin: 2rem auto;">
-        <h1>Connexion</h1>
-        <p class="page-entete__intro">Entre tes identifiants pour accéder à ton espace.</p>
+<link rel="stylesheet" href="static/css/pages/login.css">
+<!-- Conteneur principal de la page de connexion -->
+<div id="page-connexion" class="page-entete">
+    <h1>Connexion</h1>
+    <p class="page-entete__intro">Entre tes identifiants pour accéder à ton espace.</p>
 
-        <?php if (isset($erreur)): ?>
-            <p style="color: var(--rose); font-weight: bold; background: #fff; padding: 0.5rem; border: 2px solid var(--noir);"><?= $erreur ?></p>
-        <?php endif; ?>
+    <!-- Affichage du message d'erreur en cas d'échec d'authentification -->
+    <?php if (isset($erreur)): ?>
+        <p id="message-erreur-connexion" class="alerte-erreur">
+            <?= htmlspecialchars($erreur) ?>
+        </p>
+    <?php endif; ?>
 
-        <form action="index.php?action=login_post" method="POST" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-            <div>
-                <label style="display: block; font-weight: 700; margin-bottom: 0.3rem;">Email :</label>
-                <input type="email" name="email" required style="width: 100%; padding: 0.7rem; border: 3px solid var(--noir); font-family: var(--police-texte);">
-            </div>
-            <div>
-                <label style="display: block; font-weight: 700; margin-bottom: 0.3rem;">Mot de passe :</label>
-                <input type="password" name="password" required style="width: 100%; padding: 0.7rem; border: 3px solid var(--noir); font-family: var(--police-texte);">
-                <p class="page-entete__intro">Trou de mémoire ?<a href="index.php?action=reset_pass" style="color: var(--rose)"> Mot de passe oublié</a></p>
-            </div>
-            <button type="submit" class="bouton" style="background: var(--vert); color: var(--noir); cursor: pointer; border: 3px solid var(--noir); box-shadow: 4px 4px 0 var(--noir);">Se connecter →</button>
-        </form>
+    <!-- Formulaire de connexion -->
+    <form id="formulaire-connexion" action="index.php?action=login_post" method="POST">
+        
+        <div class="champ-formulaire">
+            <label for="champ-email-connexion">Email :</label>
+            <input 
+                type="email" 
+                id="champ-email-connexion" 
+                name="email" 
+                required 
+                autocomplete="email"
+            >
+        </div>
 
-        <p class="page-entete__intro">Pas de compte ?<a href="index.php?action=create_account" style="color: var(--rose)"> Créez en un !</a></p>
-    </div>
-<?php
+        <div class="champ-formulaire">
+            <label for="champ-password-connexion">Mot de passe :</label>
+            <input 
+                type="password" 
+                id="champ-password-connexion" 
+                name="password" 
+                required 
+                autocomplete="current-password"
+            >
+            <p class="page-entete__intro texte-aide-mdp">
+                Trou de mémoire ? 
+                <a href="index.php?action=reset_pass" class="lien-rose">Mot de passe oublié</a>
+            </p>
+        </div>
+
+        <button type="submit" id="bouton-connexion" class="bouton">
+            Se connecter →
+        </button>
+
+    </form>
+
+    <!-- Lien vers la création de compte -->
+    <p class="page-entete__intro texte-aide-inscription">
+        Pas de compte ? 
+        <a href="index.php?action=create_account" class="lien-rose">Crée-en un !</a>
+    </p>
+</div>
+
+<?php 
 $content = ob_get_clean();
 require 'views/base.php';
 ?>

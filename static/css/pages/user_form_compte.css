@@ -1,0 +1,72 @@
+/* ==========================================
+   PAGE INSCRIPTION / FORMULAIRE
+   ========================================== */
+
+/* Conteneur principal de la page */
+#page-inscription {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+/* Message d'erreur */
+#message-erreur.alerte-erreur {
+    color: var(--rose);
+    font-weight: bold;
+    background-color: #fff;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    margin-bottom: 1rem;
+    box-shadow: 4px 4px 0 var(--noir);
+}
+
+/* Formulaire principal */
+#formulaire-inscription {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    background-color: var(--fond-carte);
+    padding: 2rem;
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+}
+
+/* Conteneurs de champ (Label + Input) */
+.champ-formulaire label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.champ-formulaire input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* Bouton d'inscription */
+#bouton-inscription {
+    background-color: var(--vert);
+    color: var(--noir);
+    cursor: pointer;
+    border: 3px solid var(--noir);
+    box-shadow: 4px 4px 0 var(--noir);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Zone du lien bas de page */
+#lien-connexion {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-weight: 600;
+}
+
+.lien-rose {
+    color: var(--rose);
+}

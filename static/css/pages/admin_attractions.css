@@ -1,0 +1,110 @@
+/* ==========================================
+   PAGE ADMINISTRATION - GESTION DES ATTRACTIONS (CRUD)
+   ========================================== */
+
+/* En-tête */
+.entete-admin-attractions-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.intro-marge-nulle {
+    margin-bottom: 0;
+}
+
+.bouton-marge-nulle {
+    margin-top: 0;
+}
+
+.bouton-vert-admin {
+    background-color: var(--vert);
+    color: var(--noir);
+}
+
+/* Conteneur et structure du tableau CRUD */
+.conteneur-tableau-crud {
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.table-attractions-admin {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--police-texte);
+}
+
+.entete-tableau-cyan {
+    border-bottom: 4px solid var(--noir);
+    background-color: var(--cyan);
+}
+
+.cellule-tableau {
+    padding: 0.8rem;
+    border: 2px solid var(--noir);
+}
+
+.ligne-tableau-crud {
+    border-bottom: 2px solid var(--noir);
+}
+
+/* Classes utilitaires et badges de statut */
+.poids-gras {
+    font-weight: bold;
+}
+
+.texte-violet {
+    color: var(--violet);
+}
+
+.badge-statut-admin {
+    font-weight: 700;
+}
+
+.statut-admin-ouvert { color: var(--vert); }
+.statut-admin-maintenance { color: var(--orange); }
+.statut-admin-ferme { color: var(--rose); }
+
+.text-center {
+    text-align: center;
+}
+
+.message-vide-admin {
+    padding: 2rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--violet);
+}
+
+/* Boutons d'action (Modifier / Supprimer) */
+.actions-ligne-crud {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.bouton-action-crud {
+    padding: 0.3rem 0.6rem;
+    border: 2px solid var(--noir);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 2px 2px 0 var(--noir);
+}
+
+.bouton-modifier-crud {
+    background-color: var(--cyan);
+    color: var(--noir);
+}
+
+.bouton-supprimer-crud {
+    background-color: var(--rose);
+    color: #fff;
+}

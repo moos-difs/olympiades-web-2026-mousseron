@@ -59,11 +59,16 @@ Ouvrez un terminal à la racine du projet et exécutez :
 • Selon le nombre de places disponibles : De +20% à +75% du prix
 
 ## 🔑 5. Comptes de Test
+Possibilité de se connecter au compte admin, aux comptes utilisateurs test pour tester des fonctionnalités, et ajout de quatre clients factices pour simuler des statistique de ventes et des réservations effectuées.
 | Rôle | Email | Mot de passe |
 | --- | --- | --- |
 | Administrateur | admin@studiotoon.com | admin123
-| Utilisateur Test | user@studiotoon.com | user
-| Utilisateur Test 2 | test@studiotoon.com | toon
+| Utilisateur test | user@studiotoon.com | user
+| Utilisateur test | test@studiotoon.com | toon
+| Client factice | jean.dupont@email.com | client
+| Client factice | clara.martin@email.com | client
+| Client factice | lucas.bernard@email.com | client
+| Client factice | chloe.durand@email.com | client
 
 ## 🎨 6. Maquettes & Design (Figma)
 Lien vers le fichier de conception graphique : [Lien Figma - Studio Toon](https://www.figma.com/design/25r2zlfSOSYl4IoHIAkQ4t/Sans-titre?node-id=0-1&t=IAXerCPM8LtLsEzT-1/)
@@ -107,7 +112,7 @@ Lien vers le fichier de conception graphique : [Lien Figma - Studio Toon](https:
 - Fichier CSS ajoutant des animations fluides et soignées pour améliorer l'exérience utilisateur,
 - Idée personnelle -> Page Carte Intéractive, avec plan du site et bouton de chaque attraction sur le plan pour les informations la concernant.
 ## 🐛 8. Bugs Connus
-Administration : Design non responsive sur l'interface de gestion du CRUD des attractions (affichage sur mobile perfectible).
+Administration : Design non responsive sur l'interface de gestion du CRUD des attractions et du tableau des réservations (affichage sur mobile perfectible).
 
 ## 💡 9. Choix Techniques
 **Techno utilisées :**

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Modèle : AuthModel
+ * Gère l'authentification des utilisateurs, l'inscription sécurisée (hachage Argon2ID),
+ * la récupération du profil, l'historique des réservations et la procédure de réinitialisation de mot de passe.
+ */
+
 require_once __DIR__ . '/../config/Database.php';
 
 class AuthModel {
@@ -8,21 +14,27 @@ class AuthModel {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère un utilisateur en fonction de son adresse e-mail.
+     */
     public function getUserByEmail($email) {
         $stmt = $this->db->prepare("SELECT * FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
 
-    // Récupérer un utilisateur par son ID (pour la page profil)
+    /**
+     * Récupère un utilisateur par son identifiant unique (pour la page profil).
+     */
     public function getUserById($id) {
         $stmt = $this->db->prepare("SELECT * FROM utilisateurs WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
-    // Récupérer l'historique des réservations d'un utilisateur
-    // Récupérer l'historique des réservations d'un utilisateur
+    /**
+     * Récupère l'historique complet des réservations d'un utilisateur, avec le total des billets associés.
+     */
     public function getReservationsByUser($userId) {
         $stmt = $this->db->prepare("
             SELECT r.*, 
@@ -37,6 +49,9 @@ class AuthModel {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Enregistre un nouvel utilisateur dans la base de données avec hachage sécurisé du mot de passe.
+     */
     public function newUser($nom, $email, $password) {
         $hashed_password = password_hash($password, PASSWORD_ARGON2ID);
         $stmt = $this->db->prepare("
@@ -46,9 +61,10 @@ class AuthModel {
         $stmt->execute([$nom, $email, $hashed_password]);
     }
 
-    // Enregistrer le token de réinitialisation et son expiration pour un utilisateur
+    /**
+     * Enregistre le token de réinitialisation de mot de passe et sa date d'expiration (+15 minutes).
+     */
     public function saveResetToken($user_id, $token) {
-        // Le token expirera dans 15 minutes
         $expires_at = date('Y-m-d H:i:s', strtotime('+15 minutes'));
 
         $stmt = $this->db->prepare("
@@ -59,7 +75,9 @@ class AuthModel {
         return $stmt->execute([$token, $expires_at, $user_id]);
     }
 
-    // Trouver un utilisateur par son token valide et non expiré
+    /**
+     * Trouve un utilisateur par son token de réinitialisation s'il est valide et non expiré.
+     */
     public function findByValidResetToken($token) {
         $stmt = $this->db->prepare("
             SELECT * FROM utilisateurs 
@@ -70,7 +88,9 @@ class AuthModel {
         return $stmt->fetch();
     }
 
-    // Mettre à jour le mot de passe et réinitialiser les champs de token
+    /**
+     * Met à jour le mot de passe d'un utilisateur et efface les jetons de réinitialisation utilisés.
+     */
     public function updatePasswordAndClearToken($user_id, $nouveau_password) {
         $hash = password_hash($nouveau_password, PASSWORD_ARGON2ID);
 

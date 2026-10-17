@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 16 oct. 2026 à 17:54
+-- Généré le : sam. 17 oct. 2026 à 10:17
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -232,7 +232,34 @@ INSERT INTO `e_billets` (`id`, `reservation_id`, `tarif_id`, `code_unique`, `est
 (145, 19, 3, '41348241', 0, NULL),
 (146, 20, 3, '354448F2', 0, NULL),
 (147, 20, 3, 'D57EE6D3', 0, NULL),
-(148, 20, 3, 'A846A8F1', 0, NULL);
+(148, 20, 3, 'A846A8F1', 0, NULL),
+(149, 21, 1, '8F2A1C9D', 0, NULL),
+(150, 21, 1, '3E7B4D1F', 0, NULL),
+(151, 21, 2, '5A9C2E4B', 0, NULL),
+(152, 21, 2, '1D3F8E7A', 0, NULL),
+(153, 22, 1, '7C4D1A8E', 0, NULL),
+(154, 22, 1, '2E9B3F5C', 0, NULL),
+(155, 22, 1, '6A1D4E8B', 0, NULL),
+(156, 22, 2, '9F3C7A2E', 0, NULL),
+(157, 22, 2, '4B8E1D3F', 0, NULL),
+(158, 22, 3, '5E2A9C7B', 0, NULL),
+(159, 23, 1, '1F8D3E4A', 0, NULL),
+(160, 23, 1, '7A2B9C5E', 0, NULL),
+(161, 23, 2, '3C4E1F8D', 0, NULL),
+(162, 24, 1, '8B5A2C9E', 0, NULL),
+(163, 24, 1, '4D7E1F3A', 0, NULL),
+(164, 24, 1, '2C9B8A5E', 0, NULL),
+(165, 24, 1, '6F3D4E1B', 0, NULL),
+(166, 24, 2, '1A8E5C2D', 0, NULL),
+(167, 24, 2, '9E3F7B4A', 0, NULL),
+(168, 24, 2, '5C2D8A1E', 0, NULL),
+(169, 25, 1, '3D1F4E8B', 0, NULL),
+(170, 25, 1, '7A5B2C9E', 0, NULL),
+(171, 25, 1, '1E8D3F4A', 0, NULL),
+(172, 25, 1, '9C2E7A5B', 0, NULL),
+(173, 26, 1, '4E8B1D3F', 0, NULL),
+(174, 26, 2, '2A9C5E7B', 0, NULL),
+(175, 26, 2, '8D3F4E1A', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -264,7 +291,13 @@ INSERT INTO `reservations` (`id`, `utilisateur_id`, `date_visite`, `prix_total`,
 (17, 1, '2026-10-16', 395.50, '2026-10-16 09:35:51'),
 (18, 2, '2026-10-16', 339.00, '2026-10-16 10:54:40'),
 (19, 2, '2026-10-16', 38.00, '2026-10-16 11:32:53'),
-(20, 2, '2026-10-16', 0.00, '2026-10-16 13:12:03');
+(20, 2, '2026-10-16', 0.00, '2026-10-16 13:12:03'),
+(21, 8, '2026-10-20', 150.00, '2026-10-17 09:15:00'),
+(22, 9, '2026-10-22', 210.00, '2026-10-17 10:30:00'),
+(23, 10, '2026-10-25', 120.00, '2026-10-17 11:00:00'),
+(24, 11, '2026-10-31', 270.00, '2026-10-17 12:45:00'),
+(25, 8, '2026-11-01', 180.00, '2026-10-17 14:10:00'),
+(26, 9, '2026-11-05', 105.00, '2026-10-17 15:20:00');
 
 -- --------------------------------------------------------
 
@@ -313,7 +346,19 @@ INSERT INTO `reservation_billets` (`id`, `reservation_id`, `tarif_id`, `quantite
 (43, 18, 2, 3, 30.00),
 (44, 18, 3, 3, 38.00),
 (45, 19, 3, 1, 38.00),
-(46, 20, 3, 3, 0.00);
+(46, 20, 3, 3, 0.00),
+(47, 21, 1, 2, 45.00),
+(48, 21, 2, 2, 30.00),
+(49, 22, 1, 3, 45.00),
+(50, 22, 2, 2, 30.00),
+(51, 22, 3, 1, 0.00),
+(52, 23, 1, 2, 45.00),
+(53, 23, 2, 1, 30.00),
+(54, 24, 1, 4, 45.00),
+(55, 24, 2, 3, 30.00),
+(56, 25, 1, 4, 45.00),
+(57, 26, 1, 1, 45.00),
+(58, 26, 2, 2, 30.00);
 
 -- --------------------------------------------------------
 
@@ -380,7 +425,11 @@ CREATE TABLE `utilisateurs` (
 INSERT INTO `utilisateurs` (`id`, `nom`, `email`, `mot_de_passe`, `role`, `reset_token`, `reset_expires_at`) VALUES
 (1, 'Admin Toon', 'admin@studiotoon.com', '$argon2id$v=19$m=65536,t=4,p=1$SUkzaFRTLzRSYU5iWU01Yg$7s5S/MNb0Q/WGZ9+I2wbUVYme8GbHsYs2SIN0RtICaE', 'admin', NULL, NULL),
 (2, 'Visiteur Test', 'user@studiotoon.com', '$argon2id$v=19$m=65536,t=4,p=1$blA2TjRLc0ppdEVPRGZ2Zw$zi5vOGsoPp2TrCP0vyc8LXpWkctx+IRS7B8jVef3KWk', 'user', '753c1aac6884698f3f9228cbfc35a3b7b678d01f4982f87932f123cea8842df2', '2026-10-15 16:43:51'),
-(7, 'test', 'test@studiotoon.com', '$argon2id$v=19$m=65536,t=4,p=1$R0tCZ3phVENTc0dPM0pYWQ$K8CSIEknZCy8OWFd8OBw/P4LgZvSlelXmt7ZUsDdOMs', 'user', NULL, NULL);
+(7, 'test', 'test@studiotoon.com', '$argon2id$v=19$m=65536,t=4,p=1$R0tCZ3phVENTc0dPM0pYWQ$K8CSIEknZCy8OWFd8OBw/P4LgZvSlelXmt7ZUsDdOMs', 'user', NULL, NULL),
+(8, 'Jean Dupont', 'jean.dupont@email.com', '$argon2id$v=19$m=65536,t=4,p=1$ZnJTSHNmV0QuUkJtLzFQVA$gs9i6kfkZnWD074YThYotVg697jyelNFroH8YPzpM5U', 'user', NULL, NULL),
+(9, 'Clara Martin', 'clara.martin@email.com', '$argon2id$v=19$m=65536,t=4,p=1$aFphbWNmMkJ2cUlEM1NMbw$jfrNDIqPRbVqTzSK/3NorQBF1lehgq3ybUDMoG1jGms', 'user', NULL, NULL),
+(10, 'Lucas Bernard', 'lucas.bernard@email.com', '$argon2id$v=19$m=65536,t=4,p=1$UDZOVG5SYXlZSlJoWkNmbw$DsfUZJoyJiqOZp+SjUPVp90bLVU/hDmu3kN5wkPH3Tc', 'user', NULL, NULL),
+(11, 'Chloé Durand', 'chloe.durand@email.com', '$argon2id$v=19$m=65536,t=4,p=1$d2QudThoam5WTTdBUDBXYw$j00VIvSqOggaSheW839tZCRKsWFiYdlgHy1RqLitYlE', 'user', NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -458,25 +507,25 @@ ALTER TABLE `admin_logs_attentes`
 -- AUTO_INCREMENT pour la table `attractions`
 --
 ALTER TABLE `attractions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `e_billets`
 --
 ALTER TABLE `e_billets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT pour la table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT pour la table `reservation_billets`
 --
 ALTER TABLE `reservation_billets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT pour la table `tarifs`
@@ -494,7 +543,7 @@ ALTER TABLE `univers`
 -- AUTO_INCREMENT pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Contraintes pour les tables déchargées

@@ -1,0 +1,212 @@
+/* ==========================================
+   PAGE PLAN INTERACTIF DU PARC
+   ========================================== */
+
+/* En-tête */
+#entete-plan-interactif {
+    max-width: 1000px;
+    margin: 0 auto 2rem auto;
+    background-color: var(--cyan);
+    color: var(--noir);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2rem;
+    text-align: center;
+}
+
+#entete-plan-interactif h1 {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 2rem;
+}
+
+#entete-plan-interactif .page-entete__intro {
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+/* Conteneur global */
+#conteneur-plan-interactif {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Conteneur de la carte graphique */
+#carte-plan-container {
+    position: relative;
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    background-color: #fff;
+    overflow: hidden;
+}
+
+#image-plan-parc {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Épingles positionnées sur la carte */
+.epingle-carte {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease;
+}
+
+.epingle-carte:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.epingle-numero {
+    background-color: var(--rose);
+    color: #fff;
+    border: 3px solid var(--noir);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: 4px 4px 0 var(--noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Archivo Black', Impact, sans-serif;
+    font-size: 1rem;
+}
+
+/* Coordonnées géographiques spécifiques des épingles sur la carte */
+.epingle-falaise { top: 29%; left: 25%; }
+.epingle-canon { top: 10%; left: 42%; }
+.epingle-trou-portable { top: 28%; left: 68%; }
+.epingle-enclume { top: 45%; left: 78%; }
+
+/* Panneau d'information dynamique */
+.panneau-infos-cache {
+    display: none;
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2rem;
+    position: relative;
+}
+
+#bouton-fermer-panneau {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--rose);
+    color: #fff;
+    border: 2px solid var(--noir);
+    font-weight: 900;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--noir);
+}
+
+/* Éléments internes injectés dynamiquement dans le panneau */
+.panneau-entete-flex {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.panneau-image-attraction {
+    width: 220px;
+    height: 140px;
+    object-fit: cover;
+    border: 3px solid var(--noir);
+    box-shadow: 4px 4px 0 var(--noir);
+}
+
+.panneau-infos-texte {
+    flex: 1;
+}
+
+.badge-univers {
+    background-color: var(--violet);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    padding: 3px 6px;
+    text-transform: uppercase;
+    border: 2px solid var(--noir);
+}
+
+.panneau-titre-attraction {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    margin: 0.5rem 0;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: var(--noir);
+}
+
+.panneau-gag {
+    font-weight: 700;
+    color: var(--violet);
+    margin: 0 0 0.5rem 0;
+}
+
+.separateur-tiret {
+    border: 0;
+    border-top: 3px dashed var(--noir);
+    margin: 1.5rem 0;
+}
+
+.panneau-grille-criteres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    font-weight: 800;
+}
+
+.critere-carte {
+    background-color: #fff;
+    border: 2px solid var(--noir);
+    padding: 0.8rem;
+    box-shadow: 3px 3px 0 var(--noir);
+}
+
+.badge-statut-ouvert {
+    background-color: var(--vert);
+}
+
+.badge-statut-ferme {
+    background-color: var(--rose);
+    color: #fff;
+}
+
+.texte-attente-valeur {
+    color: var(--orange);
+}
+
+.panneau-description-bloc {
+    margin-top: 1rem;
+    background-color: #fff35c;
+    border: 2px solid var(--noir);
+    padding: 0.8rem;
+    font-weight: 700;
+    box-shadow: 3px 3px 0 var(--noir);
+}
+
+.panneau-action-container {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+.bouton-voir-fiche {
+    background-color: var(--cyan);
+    color: var(--noir);
+    padding: 0.6rem 1.2rem;
+    border: 3px solid var(--noir);
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--noir);
+    display: inline-block;
+    text-transform: uppercase;
+}

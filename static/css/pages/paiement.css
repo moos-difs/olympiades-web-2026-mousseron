@@ -1,0 +1,79 @@
+/* ==========================================
+   PAGE PAIEMENT SÉCURISÉ
+   ========================================== */
+
+/* En-tête */
+#entete-paiement {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    background-color: var(--cyan);
+}
+
+/* Conteneur principal */
+#conteneur-paiement {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2.5rem;
+}
+
+/* Bloc récapitulatif du montant */
+#recap-montant-total {
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    background-color: var(--vert);
+    padding: 1rem;
+    border: 3px solid var(--noir);
+    display: flex;
+    justify-content: space-between;
+}
+
+.prix-total-valeur {
+    color: var(--rose);
+}
+
+/* Formulaire et champs */
+#formulaire-paiement {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+#formulaire-paiement .champ-formulaire label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+#formulaire-paiement .champ-formulaire input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    font-weight: 600;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* Grille pour Expiration et CVV */
+.grille-champs-carte {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Bouton de paiement */
+#bouton-valider-paiement {
+    background-color: var(--rose);
+    color: #fff;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: center;
+}

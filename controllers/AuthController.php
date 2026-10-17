@@ -1,4 +1,10 @@
 <?php
+/**
+ * Contrôleur : AuthController
+ * Gère l'authentification des utilisateurs du parc Studio Toon : connexion sécurisée,
+ * déconnexion, gestion du profil, inscription, et procédure de réinitialisation de mot de passe par jeton.
+ */
+
 require_once __DIR__ . '/../models/AuthModel.php';
 
 class AuthController {
@@ -13,38 +19,49 @@ class AuthController {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Affiche le formulaire de connexion.
+     */
     public function afficherConnexion() {
-        require_once 'views/login.php';
+        require_once __DIR__ . '/../views/login.php';
     }
 
+    /**
+     * Traite la soumission du formulaire de connexion.
+     */
     public function connecter() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = trim($_POST['email']);
-            $password = $_POST['password'];
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
 
             $user = $this->model->getUserByEmail($email);
 
             if ($user && password_verify($password, $user['mot_de_passe'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_nom'] = $user['nom'];
-                $_SESSION['user_role'] = $user['role']; // 'user' ou 'admin'
+                $_SESSION['user_role'] = $user['role']; // 'client' ou 'admin'
 
                 header('Location: index.php?action=accueil');
                 exit();
             } else {
                 $erreur = "Identifiants incorrects.";
-                require_once 'views/login.php';
+                require_once __DIR__ . '/../views/login.php';
             }
         }
     }
 
+    /**
+     * Déconnecte l'utilisateur en détruisant la session.
+     */
     public function deconnecter() {
         session_destroy();
         header('Location: index.php?action=accueil');
         exit();
     }
 
-    // --- AFFICHAGE DU PROFIL UTILISATEUR ---
+    /**
+     * Affiche le profil de l'utilisateur connecté avec l'historique de ses réservations.
+     */
     public function afficherProfil() {
         if (!isset($_SESSION['user_id'])) {
             header('Location: index.php?action=login');
@@ -53,43 +70,53 @@ class AuthController {
 
         $userId = $_SESSION['user_id'];
         
-        // Informations du compte
+        // Récupération des informations du compte et des réservations associées
         $utilisateur = $this->model->getUserById($userId);
-        
-        // Liste des réservations pour accéder aux e-billets
         $reservations = $this->model->getReservationsByUser($userId);
 
-        require_once 'views/user_account.php';
+        require_once __DIR__ . '/../views/user_account.php';
     }
 
+    /**
+     * Affiche le formulaire d'inscription d'un nouveau compte.
+     */
     public function creerCompteForm() {
-        require_once 'views/user_form_compte.php';
+        require_once __DIR__ . '/../views/user_form_compte.php';
     }
 
+    /**
+     * Traite l'inscription d'un nouvel utilisateur après vérification de l'unicité de l'e-mail.
+     */
     public function creerCompteTraitement() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = trim($_POST['nom']);
-            $email = trim($_POST['email']);
-            $password = trim($_POST['password']);
+            $nom = trim($_POST['nom'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = trim($_POST['password'] ?? '');
 
             $existe = $this->model->getUserByEmail($email);
             if ($existe) {
                 $erreur = "Cet email est déjà utilisé par un autre compte.";
-                require_once 'views/user_form_compte.php';
+                require_once __DIR__ . '/../views/user_form_compte.php';
                 return;
             }
 
             $this->model->newUser($nom, $email, $password);
             
-            require_once 'views/register_success.php';
+            require_once __DIR__ . '/../views/register_success.php';
             exit();
         }
     }
 
+    /**
+     * Affiche le formulaire de demande de réinitialisation de mot de passe (mot de passe oublié).
+     */
     public function afficherFormulaireMdpOublie() {
-        require_once 'views/forgot_password.php';
+        require_once __DIR__ . '/../views/forgot_password.php';
     }
 
+    /**
+     * Traite la demande de réinitialisation et génère un jeton sécurisé temporaire.
+     */
     public function traiterMdpOublie() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
@@ -115,10 +142,13 @@ class AuthController {
                 $message_erreur = "Aucun compte trouvé avec cette adresse e-mail.";
             }
 
-            require_once 'views/forgot_password.php';
+            require_once __DIR__ . '/../views/forgot_password.php';
         }
     }
 
+    /**
+     * Affiche le formulaire de saisie d'un nouveau mot de passe après validation du jeton.
+     */
     public function afficherFormulaireNouveauMotDePasse() {
         $token = $_GET['token'] ?? '';
         
@@ -128,9 +158,12 @@ class AuthController {
             $message_erreur = "Ce lien de réinitialisation est invalide ou a expiré.";
         }
 
-        require_once 'views/reset_password_form.php';
+        require_once __DIR__ . '/../views/reset_password_form.php';
     }
 
+    /**
+     * Traite la mise à jour effective du mot de passe après vérification du jeton et confirmation.
+     */
     public function traiterNouveauMotDePasse() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = $_POST['token'] ?? '';
@@ -141,13 +174,13 @@ class AuthController {
 
             if (!$user) {
                 $message_erreur = "Session expirée ou lien invalide.";
-                require_once 'views/reset_password_form.php';
+                require_once __DIR__ . '/../views/reset_password_form.php';
                 return;
             }
 
             if ($nouveau_mdp !== $confirmation) {
                 $message_erreur = "Les mots de passe ne correspondent pas.";
-                require_once 'views/reset_password_form.php';
+                require_once __DIR__ . '/../views/reset_password_form.php';
                 return;
             }
 

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contrôleur : BilletterieController
+ * Gère l'intégralité du tunnel de réservation du parc Studio Toon : affichage des tarifs dynamiques,
+ * vérification des jauges journalières (max 2000 places), gestion du panier, validation du paiement,
+ * consultation de l'historique utilisateur, prévisualisation des e-mails et contrôle d'accès à l'entrée.
+ */
+
 require_once __DIR__ . '/../models/BilletterieModel.php';
 
 class BilletterieController {
@@ -13,6 +20,9 @@ class BilletterieController {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté, sinon le redirige vers la page de connexion.
+     */
     private function checkAuth() {
         if (!isset($_SESSION['user_id'])) {
             header('Location: index.php?action=login');
@@ -20,35 +30,39 @@ class BilletterieController {
         }
     }
 
+    /**
+     * Affiche le formulaire de billetterie avec calcul des prix dynamiques selon la date choisie.
+     */
     public function afficherFormulaire() {
         $this->checkAuth();
         $tarifsDB = $this->model->getTarifs();
         $today = date('Y-m-d');
         
-        // Récupérer la date choisie dans l'URL (si l'utilisateur a changé la date)
+        // Récupère la date choisie dans l'URL ou utilise la date du jour par défaut
         $date_visite = isset($_GET['date_visite']) ? $_GET['date_visite'] : $today;
         if ($date_visite < $today) {
             $date_visite = $today;
         }
 
-        // Calculer les prix dynamiques pour chaque tarif en fonction de cette date
+        // Calcule les prix dynamiques pour chaque tarif en fonction de la date et de la rareté
         $tarifs = [];
         foreach ($tarifsDB as $t) {
-            // Utilisation de votre méthode de prix dynamique basée sur les places restantes
             $prixDynamique = $this->model->getPrixDynamiqueParPlacesRestantes($t['id'], $t['prix'], $date_visite);
             
             $tarifs[] = [
                 'id' => $t['id'],
                 'libelle' => $t['libelle'],
                 'description' => $t['description'],
-                'prix' => $prixDynamique // On injecte le prix dynamique calculé !
+                'prix' => $prixDynamique
             ];
         }
 
-        require_once 'views/billetterie.php';
+        require_once __DIR__ . '/../views/billetterie.php';
     }
 
-    // 1. Étape intermédiaire : Validation des quantités et vérification de la jauge (2000 max)
+    /**
+     * Étape 1 : Valide les quantités commandées et vérifie la jauge journalière (2000 places max).
+     */
     public function preparerPaiement() {
         $this->checkAuth();
 
@@ -60,16 +74,16 @@ class BilletterieController {
             if (empty($date_visite) || $date_visite < $today) {
                 $erreur = "Veuillez sélectionner une date de visite valide.";
                 $tarifs = $this->model->getTarifs();
-                require_once 'views/billetterie.php';
+                require_once __DIR__ . '/../views/billetterie.php';
                 return;
             }
 
             $tarifsDB = $this->model->getTarifs();
             $prix_total = 0.00;
             $billets_details = [];
-            $total_tickets_demandés = 0;
+            $total_tickets_demandes = 0;
 
-            // 1. Vérification de la jauge globale (max 2000)
+            // Vérification de la jauge globale (maximum 2000 places par jour)
             $dejaVendus = $this->model->getNombreBilletsVendusPourDate($date_visite);
             $placesRestantes = 2000 - $dejaVendus;
 
@@ -77,31 +91,30 @@ class BilletterieController {
                 $id = $t['id'];
                 $qty = isset($quantites[$id]) ? (int)$quantites[$id] : 0;
                 if ($qty > 0) {
-                    $total_tickets_demandés += $qty;
+                    $total_tickets_demandes += $qty;
                 }
             }
 
-            if ($total_tickets_demandés <= 0) {
+            if ($total_tickets_demandes <= 0) {
                 $erreur = "Veuillez sélectionner au moins 1 billet.";
                 $tarifs = $tarifsDB;
-                require_once 'views/billetterie.php';
+                require_once __DIR__ . '/../views/billetterie.php';
                 return;
             }
 
-            if ($total_tickets_demandés > $placesRestantes) {
+            if ($total_tickets_demandes > $placesRestantes) {
                 $erreur = "Désolé ! Il ne reste plus que $placesRestantes place(s) disponible(s) pour le " . date('d/m/Y', strtotime($date_visite)) . " (Maximum 2000 visiteurs par jour).";
                 $tarifs = $tarifsDB;
-                require_once 'views/billetterie.php';
+                require_once __DIR__ . '/../views/billetterie.php';
                 return;
             }
 
-            // 2. Calcul du prix dynamique basé sur les places restantes pour chaque ligne
+            // Calcul du prix dynamique pour chaque ligne sélectionnée
             foreach ($tarifsDB as $t) {
                 $id = $t['id'];
                 $qty = isset($quantites[$id]) ? (int)$quantites[$id] : 0;
                 
                 if ($qty > 0) {
-                    // Appel de la règle dynamique selon les places restantes
                     $prix_unitaire_dynamique = $this->model->getPrixDynamiqueParPlacesRestantes($id, $t['prix'], $date_visite);
                     $sous_total = $qty * $prix_unitaire_dynamique;
                     
@@ -111,13 +124,13 @@ class BilletterieController {
                         'tarif_id' => $id,
                         'libelle' => $t['libelle'],
                         'quantite' => $qty,
-                        'prix_unitaire' => $prix_unitaire_dynamique, // Prix unitaire ajusté selon la rareté
+                        'prix_unitaire' => $prix_unitaire_dynamique,
                         'sous_total' => $sous_total
                     ];
                 }
             }
 
-            // Stockage temporaire en session pour la page de paiement
+            // Stockage temporaire du panier en session pour l'étape de paiement
             $_SESSION['panier_resa'] = [
                 'date_visite' => $date_visite,
                 'prix_total' => $prix_total,
@@ -129,7 +142,9 @@ class BilletterieController {
         }
     }
 
-    // 2. Affichage de la fausse page de paiement
+    /**
+     * Étape 2 : Affiche la page de simulation de paiement.
+     */
     public function afficherPaiement() {
         $this->checkAuth();
         if (!isset($_SESSION['panier_resa'])) {
@@ -137,10 +152,12 @@ class BilletterieController {
             exit();
         }
         $panier = $_SESSION['panier_resa'];
-        require_once 'views/paiement.php';
+        require_once __DIR__ . '/../views/paiement.php';
     }
 
-    // 3. Validation finale du paiement et enregistrement en BDD
+    /**
+     * Étape 3 : Valide le paiement et enregistre définitivement la réservation en base de données.
+     */
     public function validerPaiement() {
         $this->checkAuth();
         if (!isset($_SESSION['panier_resa'])) {
@@ -150,7 +167,6 @@ class BilletterieController {
 
         $panier = $_SESSION['panier_resa'];
 
-        // Enregistrement définitif dans la base de données
         $reservation_id = $this->model->creerReservation(
             $_SESSION['user_id'],
             $panier['date_visite'],
@@ -162,41 +178,46 @@ class BilletterieController {
             $recap = $panier;
             $recap['reservation_id'] = $reservation_id;
             
-            // Nettoyage du panier en session
+            // Nettoyage du panier en session après succès
             unset($_SESSION['panier_resa']);
 
-            require_once 'views/billetterie_recap.php';
+            require_once __DIR__ . '/../views/billetterie_recap.php';
         } else {
             $erreur = "Erreur critique lors de la validation du paiement.";
-            require_once 'views/paiement.php';
+            require_once __DIR__ . '/../views/paiement.php';
         }
     }
 
-    // 4. Consultation des réservations de l'utilisateur connecté
+    /**
+     * Affiche l'historique des réservations de l'utilisateur connecté.
+     */
     public function mesReservations() {
         $this->checkAuth();
         $reservations = $this->model->getReservationsByUser($_SESSION['user_id']);
-        require_once 'views/mes_reservations.php';
+        require_once __DIR__ . '/../views/mes_reservations.php';
     }
 
-    // 5. Consultation admin de toutes les réservations du parc
+    /**
+     * Affiche la liste de toutes les réservations du parc (réservé aux administrateurs).
+     */
     public function adminReservations() {
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             header('Location: index.php?action=login');
             exit();
         }
         $reservations = $this->model->getAllReservations();
-        require_once 'views/admin_reservations.php';
+        require_once __DIR__ . '/../views/admin_reservations.php';
     }
 
-    // --- NOUVEAU : Afficher le rendu du mail de confirmation pour une commande  ---
+    /**
+     * Affiche le rendu HTML de l'e-mail de confirmation pour une commande spécifique.
+     */
     public function voirMail($reservation_id) {
         if (!isset($_SESSION['user_role'])) {
             header('Location: index.php?action=login');
             exit();
         }
 
-        // 1. Récupération des détails de la réservation
         $stmt = $this->db->prepare("
             SELECT r.*, u.nom AS client_nom, u.email AS client_email 
             FROM reservations r 
@@ -214,7 +235,6 @@ class BilletterieController {
         $date_visite = $reservation['date_visite'];
         $prix_total = $reservation['prix_total'];
 
-        // 2. Récupération des e-billets réellement enregistrés en BDD avec leurs vrais codes uniques
         $e_billets_db = $this->model->getEBilletsByReservation($reservation_id);
 
         $e_billets = [];
@@ -223,26 +243,29 @@ class BilletterieController {
             $e_billets[] = [
                 'libelle' => $eb['libelle'],
                 'numero_billet' => $reservation_id . '-' . $index,
-                'code_unique' => $eb['code_unique'] // Le VRAI code stocké en BDD !
+                'code_unique' => $eb['code_unique']
             ];
             $index++;
         }
 
-        // 3. Affichage du rendu HTML du mail
-        require_once 'mails/email_confirmation.php';
+        require_once __DIR__ . '/../mails/email_confirmation.php';
         exit();
     }
 
-    // Afficher la page de contrôle de billet (Admin)
+    /**
+     * Affiche l'interface administrateur pour le contrôle des billets à l'entrée.
+     */
     public function afficherControleBillet() {
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             header('Location: index.php?action=login');
             exit();
         }
-        require_once 'views/admin_controle_billet.php';
+        require_once __DIR__ . '/../views/admin_controle_billet.php';
     }
 
-    // Traiter la vérification du code unique du billet
+    /**
+     * Traite la vérification du code unique d'un billet scanné ou saisi à l'entrée.
+     */
     public function verifierBillet() {
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             header('Location: index.php?action=login');
@@ -265,13 +288,13 @@ class BilletterieController {
                 $message_resultat = "❌ BILLET INVALIDE POUR AUJOURD'HUI : Ce billet est prévu pour le **$date_formatee** (Aujourd'hui nous sommes le " . date('d/m/Y') . ").";
                 $statut_classe = "erreur";
             } else {
-                // Tout est valide ! On valide le billet en base (passage à est_utilise = 1)
+                // Billet valide : enregistrement de l'utilisation en base de données
                 $this->model->validerBilletParCode($billet['id']);
                 $message_resultat = "✅ VALIDÉ ! Entrée autorisée pour " . htmlspecialchars($billet['client_nom']) . " (" . htmlspecialchars($billet['tarif_libelle']) . ").";
                 $statut_classe = "succes";
             }
 
-            require_once 'views/admin_controle_billet.php';
+            require_once __DIR__ . '/../views/admin_controle_billet.php';
             exit();
         }
     }

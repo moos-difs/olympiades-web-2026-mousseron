@@ -1,4 +1,11 @@
 <?php
+/**
+ * Modèle : BilletterieModel
+ * Gère l'ensemble de la logique liée à la billetterie du parc : tarification,
+ * création de réservations sécurisées par transaction, génération des e-billets unitaires
+ * et contrôle des accès à l'entrée.
+ */
+
 require_once __DIR__ . '/../config/Database.php';
 
 class BilletterieModel {
@@ -8,11 +15,17 @@ class BilletterieModel {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère la liste de tous les tarifs disponibles.
+     */
     public function getTarifs() {
         $stmt = $this->db->query("SELECT * FROM tarifs ORDER BY id ASC");
         return $stmt->fetchAll();
     }
 
+    /**
+     * Calcule le nombre total de billets déjà vendus pour une date de visite spécifique.
+     */
     public function getNombreBilletsVendusPourDate($date_visite) {
         $stmt = $this->db->prepare("
             SELECT SUM(rb.quantite) as total 
@@ -22,10 +35,13 @@ class BilletterieModel {
         ");
         $stmt->execute([$date_visite]);
         $result = $stmt->fetch();
-        return $result['total'] ? (int)$result['total'] : 0;
+        return ($result && $result['total']) ? (int)$result['total'] : 0;
     }
 
-    // --- CRÉATION DE LA RÉSERVATION + GÉNÉRATION ET STOCKAGE DES E-BILLETS UNIQUES ---
+    /**
+     * Crée une réservation globale, enregistre les lignes de commande
+     * et génère un e-billet individuel doté d'un code unique par place achetée (via Transaction PDO).
+     */
     public function creerReservation($utilisateur_id, $date_visite, $prix_total, $billets_details) {
         try {
             $this->db->beginTransaction();
@@ -79,7 +95,9 @@ class BilletterieModel {
         }
     }
 
-    // Récupérer tous les e-billets générés pour une réservation (pour la vue mail)
+    /**
+     * Récupère tous les e-billets générés pour une réservation (utilisé notamment pour l'affichage de l'e-mail).
+     */
     public function getEBilletsByReservation($reservation_id) {
         $stmt = $this->db->prepare("
             SELECT eb.*, t.libelle 
@@ -91,7 +109,9 @@ class BilletterieModel {
         return $stmt->fetchAll();
     }
 
-    // Récupérer un e-billet par son code unique (pour le contrôle à l'entrée)
+    /**
+     * Récupère un e-billet par son code unique (utilisé lors du contrôle d'accès à l'entrée du parc).
+     */
     public function getBilletByCode($code_unique) {
         $stmt = $this->db->prepare("
             SELECT eb.*, r.date_visite, t.libelle AS tarif_libelle, u.nom AS client_nom 
@@ -105,7 +125,9 @@ class BilletterieModel {
         return $stmt->fetch();
     }
 
-    // Marquer un billet comme utilisé à l'entrée du parc
+    /**
+     * Marque un e-billet comme utilisé et enregistre l'horodatage lors de l'accès au parc.
+     */
     public function validerBilletParCode($id) {
         $stmt = $this->db->prepare("
             UPDATE e_billets 
@@ -115,6 +137,9 @@ class BilletterieModel {
         return $stmt->execute([$id]);
     }
 
+    /**
+     * Récupère toutes les réservations effectuées par un utilisateur spécifique.
+     */
     public function getReservationsByUser($utilisateur_id) {
         $stmt = $this->db->prepare("
             SELECT * FROM reservations 
@@ -125,6 +150,9 @@ class BilletterieModel {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère l'intégralité des réservations du parc (Vue administrateur).
+     */
     public function getAllReservations() {
         $stmt = $this->db->query("
             SELECT r.*, u.nom AS utilisateur_nom, u.email AS utilisateur_email 
@@ -136,22 +164,22 @@ class BilletterieModel {
     }
 
     /**
-     * Calcule le prix dynamique basé sur les places restantes (Capacité max : 2000 places)
+     * Calcule le prix dynamique basé sur les places restantes (Capacité maximale : 2000 places).
      */
     public function getPrixDynamiqueParPlacesRestantes($tarif_id, $prix_de_base, $date_visite) {
         $capaciteMax = 2000;
         $dejaVendus = $this->getNombreBilletsVendusPourDate($date_visite);
         $placesRestantes = max(0, $capaciteMax - $dejaVendus);
 
-        // Règle d'augmentation selon la rareté :
-        // - S'il reste plus de 500 places : Prix normal (multiplicateur 1.0)
+        // Grille tarifaire dynamique selon la rareté :
+        // - Plus de 500 places restantes : Tarif normal (multiplicateur 1.0)
         // - Entre 201 et 500 places restantes : +20% (multiplicateur 1.2)
         // - Entre 51 et 200 places restantes : +40% (multiplicateur 1.4)
-        // - 50 places restantes ou moins (les dernières) : +75% (multiplicateur 1.75)
+        // - 50 places restantes ou moins (dernières places) : +75% (multiplicateur 1.75)
         
         $multiplicateur = 1.0;
         if ($placesRestantes <= 50) {
-            $multiplicateur = 1.75; // Les 50 dernières places coûtent beaucoup plus cher
+            $multiplicateur = 1.75;
         } elseif ($placesRestantes <= 200) {
             $multiplicateur = 1.40;
         } elseif ($placesRestantes <= 500) {

@@ -1,0 +1,52 @@
+/* ==========================================
+   PAGE MES RÉSERVATIONS
+   ========================================== */
+
+/* Carte individuelle de réservation */
+.liste-realisations .carte-realisation {
+    background-color: var(--fond-carte);
+    border: 3px solid var(--noir);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 4px 4px 0 var(--noir);
+}
+
+/* Titre de la carte */
+.carte-realisation__titre {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* Métadonnées (dates) */
+.carte-realisation__meta {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.date-visite-valeur {
+    color: var(--rose);
+}
+
+/* Extrait / Montant total */
+.carte-realisation__extrait {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.badge-montant-total {
+    color: var(--vert);
+    background-color: var(--noir);
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+}
+
+/* Lien rose utilitaire */
+.lien-rose {
+    color: var(--rose);
+    font-weight: 700;
+    text-decoration: underline;
+}

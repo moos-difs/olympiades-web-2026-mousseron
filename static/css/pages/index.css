@@ -1,0 +1,42 @@
+/* ==========================================
+   PAGE ACCUEIL
+   ========================================== */
+
+/* Section Hero principale */
+#hero-accueil.hero {
+    background-color: var(--cyan);
+    padding: 1.5rem;
+    text-align: center;
+    border: 5px solid var(--noir);
+    box-shadow: 10px 10px 0 var(--noir);
+    margin-bottom: 3rem;
+    transform: rotate(0.4deg);
+}
+
+.hero__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 3px solid var(--noir);
+    box-sizing: border-box;
+}
+
+.hero__actions {
+    margin-top: 1.5rem;
+}
+
+/* Bouton spécifique du Hero */
+#bouton-decouvrir-attractions {
+    background-color: var(--rose);
+    font-size: 1.1rem;
+    padding: 0.9rem 1.8rem;
+}
+
+/* Personnalisation des cartes d'accès rapide par univers */
+.carte-acces--studio-2d {
+    background-color: var(--vert);
+}
+
+.carte-acces--chapiteau {
+    background-color: var(--orange);
+}

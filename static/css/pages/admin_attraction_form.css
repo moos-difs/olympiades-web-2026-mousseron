@@ -1,0 +1,81 @@
+/* ==========================================
+   PAGE FORMULAIRE ATTRACTION (CREATION / EDITION ADMIN)
+   ========================================== */
+
+/* En-tête */
+#entete-form-attraction {
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+
+.lien-retour-admin {
+    font-weight: 700;
+    color: var(--noir);
+    text-decoration: underline;
+}
+
+/* Conteneur principal */
+#conteneur-form-attraction {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2.5rem;
+}
+
+/* Formulaire */
+#formulaire-attraction-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    font-family: var(--police-texte);
+}
+
+.champ-formulaire-admin label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.champ-formulaire-admin input[type="text"],
+.champ-formulaire-admin input[type="number"],
+.champ-formulaire-admin textarea,
+.champ-formulaire-admin select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    font-weight: 600;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* Couleurs spécifiques des selects */
+.select-univers-admin {
+    background-color: var(--cyan) !important;
+}
+
+.select-statut-admin {
+    background-color: var(--vert) !important;
+}
+
+/* Grille pour taille et statut sur 2 colonnes */
+.grille-champs-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Bouton de validation */
+#bouton-soumettre-attraction {
+    background-color: var(--rose);
+    color: #fff;
+    margin-top: 1rem;
+    padding: 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}

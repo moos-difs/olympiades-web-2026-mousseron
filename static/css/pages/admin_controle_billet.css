@@ -1,0 +1,75 @@
+/* ==========================================
+   PAGE CONTRÔLE DES BILLETS (ENTRÉE PARC)
+   ========================================== */
+
+/* En-tête */
+#entete-controle-billets {
+    max-width: 650px;
+    margin: 0 auto 2rem auto;
+    background-color: var(--orange);
+}
+
+/* Conteneur principal */
+#conteneur-controle-billets {
+    max-width: 650px;
+    margin: 0 auto;
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2.5rem;
+}
+
+/* Formulaire et champ Code Unique */
+#formulaire-scan-billet {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.champ-formulaire-code label {
+    display: block;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+#champ-code-unique {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid var(--noir);
+    font-family: monospace;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-align: center;
+    background-color: #fff;
+    text-transform: uppercase;
+    box-sizing: border-box;
+}
+
+/* Bouton de vérification */
+#bouton-verifier-billet {
+    background-color: var(--vert);
+    color: var(--noir);
+    padding: 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Encadré de résultat du scan */
+#bloc-resultat-controle {
+    margin-top: 2rem;
+    border: 3px solid var(--noir);
+    padding: 1.5rem;
+    box-shadow: 5px 5px 0 var(--noir);
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--noir);
+}
+
+/* Variantes de couleur selon le statut */
+.resultat-neutre { background-color: var(--cyan); }
+.resultat-erreur { background-color: var(--rose); color: #fff !important; }
+.resultat-avertissement { background-color: var(--orange); }
+.resultat-succes { background-color: var(--vert); }

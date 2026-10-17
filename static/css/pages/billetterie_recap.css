@@ -1,0 +1,104 @@
+/* ==========================================
+   PAGE COMMANDE VALIDÉE (SUCCÈS PAIEMENT)
+   ========================================== */
+
+#carte-commande-validee.fiche-veille {
+    max-width: 650px;
+    margin: 2rem auto;
+    background-color: var(--vert);
+    padding: 2.5rem;
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    transform: rotate(-0.4deg);
+}
+
+.titre-validation {
+    font-size: 2.2rem;
+    color: var(--noir);
+    margin-bottom: 0.5rem;
+    -webkit-text-stroke: 1px var(--noir);
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+}
+
+.texte-validation {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--noir);
+}
+
+.badge-date-visite {
+    background-color: #fff;
+    padding: 0.2rem 0.5rem;
+    border: 2px solid var(--noir);
+}
+
+/* Panneau récapitulatif des billets */
+.panneau-details-commande {
+    background-color: #fff;
+    border: 3px solid var(--noir);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: left;
+    box-shadow: 4px 4px 0 var(--noir);
+}
+
+.titre-details-commande {
+    margin-top: 0;
+    border-bottom: 3px solid var(--noir);
+    padding-bottom: 0.5rem;
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
+
+.liste-billets-recens {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ligne-billet-recap {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    border-bottom: 1px dashed var(--noir);
+    padding-bottom: 0.4rem;
+}
+
+.total-paye-container {
+    margin-top: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    border-top: 3px solid var(--noir);
+    padding-top: 0.8rem;
+}
+
+.montant-total-valeur {
+    color: var(--rose);
+}
+
+/* Boutons d'action */
+.actions-validation {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#bouton-vers-reservations {
+    background-color: var(--noir);
+    color: #fff;
+    margin-top: 0;
+}
+
+#bouton-vers-accueil-val {
+    background-color: var(--cyan);
+    color: var(--noir);
+    margin-top: 0;
+}

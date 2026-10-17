@@ -1,0 +1,167 @@
+/* ==========================================
+   PAGE BILLETTERIE OFFICIELLE
+   ========================================== */
+
+#entete-billetterie {
+    max-width: 750px;
+    margin: 0 auto 2rem auto;
+}
+
+#alerte-erreur-billetterie {
+    max-width: 750px;
+    margin: 0 auto 1.5rem auto;
+    background-color: var(--rose);
+    color: #fff;
+    font-weight: bold;
+    padding: 1rem;
+    border: 3px solid var(--noir);
+    box-shadow: 5px 5px 0 var(--noir);
+}
+
+#conteneur-billetterie {
+    max-width: 750px;
+    margin: 0 auto;
+    background-color: var(--fond-carte);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2rem;
+}
+
+#formulaire-billetterie {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.label-etape {
+    display: block;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Champ de sélection de date */
+#date_visite {
+    width: 100%;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    font-weight: 700;
+    font-size: 1.1rem;
+    background-color: var(--cyan);
+    box-sizing: border-box;
+}
+
+/* Liste des tarifs */
+.liste-tarifs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.carte-tarif {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border: 3px solid var(--noir);
+    padding: 1rem;
+    box-shadow: 4px 4px 0 var(--noir);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tarif-libelle {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.tarif-description {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--violet);
+}
+
+.tarif-prix {
+    font-weight: 800;
+    color: var(--rose);
+    margin-top: 0.2rem;
+}
+
+/* Sélecteur de quantité (boutons +/-) */
+.selecteur-quantite-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bouton-quantite {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--noir);
+    font-weight: 900;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bouton-moins {
+    background-color: var(--rose);
+    color: #fff;
+}
+
+.bouton-plus {
+    background-color: var(--vert);
+    color: var(--noir);
+}
+
+.affichage-chiffre-quantite {
+    width: 50px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 3px solid var(--noir);
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+}
+
+/* Encadré du total et bouton de validation */
+#encadre-total-panier {
+    background-color: var(--noir);
+    color: #fff;
+    padding: 1.2rem;
+    border: 3px solid var(--noir);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.total-libelle {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.total-montant {
+    font-family: var(--police-titre);
+    font-size: 1.8rem;
+    color: var(--vert);
+    display: block;
+}
+
+#bouton-valider-reservation {
+    background-color: var(--rose);
+    color: #fff;
+    margin-top: 0;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}

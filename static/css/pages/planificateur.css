@@ -1,0 +1,170 @@
+/* ==========================================
+   PAGE PLANIFICATEUR DE VISITE
+   ========================================== */
+
+/* En-tête */
+#entete-planificateur {
+    max-width: 900px;
+    margin: 0 auto 2rem auto;
+    background-color: var(--violet);
+    color: #fff;
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2rem;
+}
+
+.titre-planificateur {
+    color: #fff;
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 2rem;
+}
+
+.intro-planificateur {
+    color: #fff;
+    margin: 0.5rem 0 0;
+    font-weight: 700;
+}
+
+/* Structure globale */
+#conteneur-planificateur {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Formulaire de critères */
+#formulaire-planificateur {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.champ-formulaire-taille {
+    flex: 1;
+    min-width: 250px;
+}
+
+.champ-formulaire-taille label {
+    display: block;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.champ-formulaire-taille input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 3px solid var(--noir);
+    font-family: var(--police-texte);
+    font-weight: 700;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+#bouton-generer-parcours {
+    background-color: var(--cyan);
+    color: var(--noir);
+    padding: 0.9rem 1.5rem;
+    border: 3px solid var(--noir);
+    font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 var(--noir);
+    cursor: pointer;
+}
+
+/* Liste du parcours optimisé */
+.liste-parcours {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.carte-attraction-parcours {
+    background-color: #fff;
+    border: 3px solid var(--noir);
+    padding: 1.2rem;
+    box-shadow: 4px 4px 0 var(--noir);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.infos-attraction-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.badge-index-parcours {
+    background-color: var(--violet);
+    color: #fff;
+    font-family: 'Archivo Black', Impact, sans-serif;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 2px 2px 0 var(--noir);
+}
+
+.nom-attraction {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    margin: 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.univers-attraction {
+    margin: 0.2rem 0 0 0;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Badges et actions d'attractions */
+.meta-attraction-parcours {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge-attente {
+    background-color: var(--vert);
+    border: 2px solid var(--noir);
+    padding: 0.4rem 0.8rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.badge-taille {
+    background-color: #fff35c;
+    border: 2px solid var(--noir);
+    padding: 0.4rem 0.8rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.bouton-voir-attraction {
+    background-color: var(--cyan);
+    color: var(--noir);
+    padding: 0.4rem 0.8rem;
+    border: 2px solid var(--noir);
+    font-weight: 900;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--noir);
+}

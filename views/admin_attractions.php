@@ -1,69 +1,93 @@
-<?php
-$pageTitle = "Attractions - Studio Toon";
-ob_start();
+<?php 
+/**
+ * Vue : Gestion Admin des Attractions (CRUD)
+ * Interface administrateur permettant d'ajouter, modifier ou supprimer les attractions du parc.
+ */
+
+$pageTitle = "Administration des Attractions - Studio Toon";
+ob_start(); 
 ?>
+<link rel="stylesheet" href="static/css/pages/admin_attractions.css">
 <?php if (isset($_SESSION['user_id']) && $_SESSION['user_role'] === "admin") : ?>
+
+    <!-- En-tête de la page d'administration -->
     <div class="page-entete">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div class="entete-admin-attractions-flex">
             <div>
                 <h1>🛠️ Gestion Admin</h1>
-                <p class="page-entete__intro" style="margin-bottom: 0;">Ajoutez, modifiez ou supprimez les attractions du parc.</p>
+                <p class="page-entete__intro intro-marge-nulle">Ajoutez, modifiez ou supprimez les attractions du parc.</p>
             </div>
             <!-- Bouton pour créer une nouvelle attraction -->
-            <a href="index.php?action=admin_create" class="bouton" style="background: var(--vert); color: var(--noir); margin-top: 0;">+ Ajouter une attraction</a>
+            <a href="index.php?action=admin_create" class="bouton bouton-vert-admin bouton-marge-nulle">
+                + Ajouter une attraction
+            </a>
         </div>
     </div>
 
     <!-- Tableau de gestion CRUD -->
-    <div class="table-responsive" style="background: var(--fond-carte); border: 4px solid var(--noir); box-shadow: 8px 8px 0 var(--noir); padding: 1.5rem; overflow-x: auto;">
-        <table class="crud-table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: var(--police-texte);">
+    <div class="table-responsive conteneur-tableau-crud">
+        <table class="crud-table table-attractions-admin">
             <thead>
-                <tr style="border-bottom: 4px solid var(--noir); background: var(--cyan);">
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">ID</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">Nom</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">Univers</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">Taille Min</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">Statut</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir);">Attente</th>
-                    <th style="padding: 0.8rem; border: 2px solid var(--noir); text-align: center;">Actions</th>
+                <tr class="entete-tableau-cyan">
+                    <th class="cellule-tableau">ID</th>
+                    <th class="cellule-tableau">Nom</th>
+                    <th class="cellule-tableau">Univers</th>
+                    <th class="cellule-tableau">Taille Min</th>
+                    <th class="cellule-tableau">Statut</th>
+                    <th class="cellule-tableau">Attente</th>
+                    <th class="cellule-tableau text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($attractions)): ?>
                     <?php foreach ($attractions as $a): ?>
-                    <tr style="border-bottom: 2px solid var(--noir);">
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir); font-weight: bold;"><?= $a['id'] ?></td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir); font-weight: bold;"><?= htmlspecialchars($a['nom']) ?></td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir);"><?= htmlspecialchars($a['univers_nom']) ?></td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir);"><?= htmlspecialchars($a['taille_minimale']) ?> cm</td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir);">
-                            <span style="color: <?= $a['statut'] == 'Ouvert' ? 'var(--vert)' : ($a['statut'] == 'Maintenance' ? 'var(--orange)' : 'var(--rose)') ?>; font-weight: 700;">
-                                <?= htmlspecialchars($a['statut']) ?>
+                    <tr class="ligne-tableau-crud">
+                        <td class="cellule-tableau poids-gras"><?= htmlspecialchars($a['id'] ?? '') ?></td>
+                        <td class="cellule-tableau poids-gras"><?= htmlspecialchars($a['nom'] ?? '') ?></td>
+                        <td class="cellule-tableau"><?= htmlspecialchars($a['univers_nom'] ?? '') ?></td>
+                        <td class="cellule-tableau"><?= htmlspecialchars($a['taille_minimale'] ?? '') ?> cm</td>
+                        <td class="cellule-tableau">
+                            <?php 
+                                $statut = $a['statut'] ?? 'Inconnu';
+                                $classeStatut = 'statut-admin-ouvert';
+                                if ($statut === 'Maintenance') $classeStatut = 'statut-admin-maintenance';
+                                elseif ($statut === 'Ferme') $classeStatut = 'statut-admin-ferme';
+                            ?>
+                            <span class="badge-statut-admin <?= $classeStatut ?>">
+                                <?= htmlspecialchars($statut) ?>
                             </span>
                         </td>
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir); font-weight: bold; color: var(--violet);">
-                            <?= htmlspecialchars($a['attente']) ?> min
-                        </td>                        
-                        <td style="padding: 0.8rem; border: 2px solid var(--noir); text-align: center;">
-                            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                        <td class="cellule-tableau poids-gras texte-violet">
+                            <?= htmlspecialchars($a['attente'] ?? '0') ?> min
+                        </td>                       
+                        <td class="cellule-tableau text-center">
+                            <div class="actions-ligne-crud">
                                 <!-- Bouton Modifier -->
-                                <a href="index.php?action=admin_edit&id=<?= $a['id'] ?>" style="background: var(--cyan); color: var(--noir); padding: 0.3rem 0.6rem; border: 2px solid var(--noir); font-weight: 700; font-size: 0.85rem;">Modifier</a>
+                                <a href="index.php?action=admin_edit&id=<?= htmlspecialchars($a['id'] ?? '') ?>" class="bouton-action-crud bouton-modifier-crud">
+                                    Modifier
+                                </a>
                                 <!-- Bouton Supprimer -->
-                                <a href="index.php?action=admin_delete&id=<?= $a['id'] ?>" onclick="return confirm('Es-tu sûr de vouloir supprimer cette attraction ?');" style="background: var(--rose); color: #fff; padding: 0.3rem 0.6rem; border: 2px solid var(--noir); font-weight: 700; font-size: 0.85rem;">Supprimer</a>
+                                <a href="index.php?action=admin_delete&id=<?= htmlspecialchars($a['id'] ?? '') ?>" onclick="return confirm('Es-tu sûr de vouloir supprimer cette attraction ?');" class="bouton-action-crud bouton-supprimer-crud">
+                                    Supprimer
+                                </a>
                             </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" style="padding: 2rem; text-align: center; font-weight: 700; color: var(--violet);">Aucune attraction enregistrée dans la base de données.</td>
+                        <td colspan="7" class="cellule-tableau message-vide-admin">
+                            Aucune attraction enregistrée dans la base de données.
+                        </td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+
 <?php endif; ?>
-<?php
+
+<?php 
 $content = ob_get_clean();
 require 'views/base.php';
 ?>

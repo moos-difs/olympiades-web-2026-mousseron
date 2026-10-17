@@ -1,0 +1,144 @@
+/* ==========================================
+   PAGE TEMPS D'ATTENTE EN LIVE (WEBSOCKET)
+   ========================================== */
+
+#entete-live {
+    background-color: var(--cyan);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.titre-live {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.intro-live {
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.maj-container {
+    margin-top: 1rem;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.badge-maj {
+    background-color: #fff;
+    padding: 0.2rem 0.5rem;
+    border: 2px solid var(--noir);
+}
+
+#grille-live {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Carte individuelle d'attraction en live */
+.carte-attraction-live {
+    background-color: #fff;
+    border: 4px solid var(--noir);
+    box-shadow: 6px 6px 0 var(--noir);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carte-live-entete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.carte-live-titre {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.badge-statut {
+    font-size: 0.75rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border: 2px solid var(--noir);
+    text-transform: uppercase;
+}
+
+.badge-statut-ouvert-live {
+    background-color: #00ff9c;
+    color: #101010;
+}
+
+.badge-statut-ferme-live {
+    background-color: #ff2ea6;
+    color: #fff;
+}
+
+.carte-live-corps {
+    margin-top: 1rem;
+    border-top: 3px dashed var(--noir);
+    padding-top: 0.8rem;
+    text-align: center;
+}
+
+.libelle-attente-live {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: block;
+    color: #555;
+}
+
+.valeur-attente {
+    font-family: 'Archivo Black', Impact, sans-serif;
+    font-size: 2rem;
+    color: var(--violet, #7c3aff);
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+/* ==========================================
+   ANIMATIONS DE VARIATION DES TEMPS D'ATTENTE
+   ========================================== */
+
+/* Flash rouge lors d'une hausse du temps d'attente */
+@keyframes flashRouge {
+    0% {
+        background-color: rgba(255, 46, 166, 0.3);
+        transform: scale(1.05);
+    }
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+}
+
+/* Flash vert lors d'une baisse du temps d'attente */
+@keyframes flashVert {
+    0% {
+        background-color: rgba(0, 255, 156, 0.4);
+        transform: scale(1.05);
+    }
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+}
+
+/* Classes déclenchées dynamiquement par JavaScript */
+.temps-hausse {
+    color: #ff2ea6 !important;
+    animation: flashRouge 0.8s ease;
+}
+
+.temps-baisse {
+    color: #00b862 !important;
+    animation: flashVert 0.8s ease;
+}

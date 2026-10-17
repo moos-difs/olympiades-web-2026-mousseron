@@ -1,0 +1,64 @@
+/* ==========================================
+   PAGE DÉTAIL D'UNE ATTRACTION
+   ========================================== */
+
+/* Fil d'ariane & Navigation */
+.lien-retour-attractions {
+    font-weight: 700;
+    color: var(--noir);
+    text-decoration: underline;
+}
+
+/* Titres & Méta */
+.univers-nom-highlight {
+    color: var(--rose);
+    font-weight: 800;
+}
+
+/* Cadre photo néo-brutaliste */
+#cadre-image-attraction {
+    background-color: var(--cyan);
+    border: 4px solid var(--noir);
+    box-shadow: 8px 8px 0 var(--noir);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.image-attraction-detail {
+    width: 100%;
+    height: auto;
+    max-height: 550px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    border: 3px solid var(--noir);
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* Textes spécifiques des blocs */
+.texte-gag-cartoon {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--violet);
+}
+
+.texte-description-decor,
+.texte-caracteristiques {
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+/* Badges de statut */
+.badge-statut-detail {
+    font-weight: 700;
+}
+
+.statut-ouvert-detail {
+    color: var(--noir);
+}
+
+.statut-ferme-detail {
+    color: var(--rose);
+}

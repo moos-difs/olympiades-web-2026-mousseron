@@ -1,0 +1,57 @@
+/* ==========================================
+   LAYOUT GLOBAL & BASE (FOOTER STICKY)
+   ========================================== */
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#corps-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.contenu {
+    flex: 1; /* Pousse le footer vers le bas si la page est courte */
+}
+
+/* ==========================================
+   EN-TÊTE & LOGO
+   ========================================== */
+
+.icone-vert {
+    color: var(--vert);
+}
+
+.logo-studio {
+    color: #fdc80f;
+}
+
+.logo-toon {
+    color: #fd312d;
+}
+
+/* ==========================================
+   NAVIGATION & BOUTONS DE CONNEXION DANS LE MENU
+   ========================================== */
+
+.lien-nav-profil {
+    background-color: var(--violet);
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border: 3px solid var(--noir);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
+
+.lien-nav-deconnexion {
+    background-color: var(--rose);
+    color: #fff;
+}
+
+.lien-nav-connexion {
+    background-color: var(--cyan);
+}

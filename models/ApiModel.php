@@ -1,4 +1,10 @@
 <?php
+/**
+ * Modèle : ApiModel
+ * Gère les données globales destinées à l'API ou aux services externes du parc Studio Toon
+ * (exportation structurée des informations du parc et de ses attractions).
+ */
+
 require_once __DIR__ . '/../config/Database.php';
 
 class ApiModel {
@@ -8,14 +14,17 @@ class ApiModel {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère l'ensemble des données structurées du parc (informations générales et liste des attractions).
+     * Vérifie que l'identifiant du parc demandé correspond bien au parc principal (ID 1).
+     */
     public function getParcComplet($id) {
-        // Par exemple, on fixe l'ID du parc à 1. 
-        // S'il n'y a pas d'ID 1 ou si vous voulez restreindre, vous pouvez ajuster la condition.
+        // Validation de l'ID du parc (fixé à 1 pour Studio Toon)
         if ($id != 1) {
-            return false; // Déclenchera l'erreur si l'ID du parc n'existe pas
+            return false;
         }
 
-        // 1. Récupération des informations générales du parc
+        // 1. Définition des informations générales du parc
         $parc = [
             'id_parc' => 1,
             'nom' => 'Studio Toon',
@@ -23,7 +32,7 @@ class ApiModel {
             'statut_general' => 'Ouvert'
         ];
 
-        // 2. Récupération de toutes les attractions avec leur univers (en suivant votre schéma BDD)
+        // 2. Récupération de toutes les attractions avec leur univers associé
         $stmt = $this->db->query("
             SELECT a.*, u.nom AS univers_nom 
             FROM attractions a 
@@ -31,12 +40,12 @@ class ApiModel {
         ");
         $attractions = $stmt->fetchAll();
 
-        // 3. S'il n'y a aucune attraction ou aucun contenu, on peut considérer que les données n'existent pas
+        // 3. Vérification de l'existence des données d'attractions
         if (empty($attractions)) {
             return false;
         }
 
-        // On combine le tout dans un seul tableau de données
+        // Intégration de la liste des attractions dans le tableau global du parc
         $parc['attractions'] = $attractions;
 
         return $parc;
