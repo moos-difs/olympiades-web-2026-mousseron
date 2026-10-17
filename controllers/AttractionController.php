@@ -89,10 +89,15 @@ class AttractionController {
             $caracteristiques = trim($_POST['caracteristiques'] ?? '');
             $attente = trim($_POST['attente'] ?? '0');
             $taille_minimale = (int)($_POST['taille_minimale'] ?? 120);
-            $statut = $_POST['statut'] ?? 'Ouvert';
+            $statut =$_POST['statut'] ?? 'Ouvert';
 
-            $this->model->addAttraction($nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id);
+            $this->model->addAttraction($nom, $image,$description, $gag,$caracteristiques, $attente,$taille_minimale, $statut,$univers_id);
             
+            // Journalisation de la création dans admin_logs
+            if (method_exists($this->model, 'logAdminAction')) {
+                $this->model->logAdminAction($_SESSION['user_id'] ?? 1, 'CREATION_ATTRACTION', "Création de l'attraction : « {$nom} »");
+            }
+
             header('Location: index.php?action=admin_attractions');
             exit();
         }
@@ -102,11 +107,9 @@ class AttractionController {
      * Affiche le formulaire de modification d'une attraction existante (Admin).
      */
     public function adminModifierForm($id) {
-        $this->checkAdmin();
-        $attraction = $this->model->getAttractionById($id);
+        $this->checkAdmin();$attraction = $this->model->getAttractionById($id);
         
-        if (!$attraction) {
-            $this->erreur("Impossible de modifier : l'attraction est introuvable.");
+        if (!$attraction) {$this->erreur("Impossible de modifier : l'attraction est introuvable.");
             return;
         }
 
@@ -116,8 +119,7 @@ class AttractionController {
     /**
      * Traite la modification d'une attraction, enregistre les logs, notifie via WebSocket et redirige (Admin).
      */
-    public function adminModifierTraitement($id) {
-        $this->checkAdmin();
+    public function adminModifierTraitement($id) {$this->checkAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = trim($_POST['nom'] ?? '');
             $univers_id = (int)($_POST['univers_id'] ?? 1);
@@ -127,21 +129,21 @@ class AttractionController {
             $caracteristiques = trim($_POST['caracteristiques'] ?? '');
             $attente = trim($_POST['attente'] ?? '0');
             $taille_minimale = (int)($_POST['taille_minimale'] ?? 120);
-            $statut = $_POST['statut'] ?? 'Ouvert';
+            $statut =$_POST['statut'] ?? 'Ouvert';
 
             // 1. Récupération de l'ancien temps d'attente avant modification
             $ancienTemps = null;
-            if (method_exists($this->model, 'getAttractionById')) {
-                $attractionActuelle = $this->model->getAttractionById($id);
-                $ancienTemps = $attractionActuelle['attente'] ?? null;
+            if (method_exists($this->model, 'getAttractionById')) {$attractionActuelle = $this->model->getAttractionById($id);
+                $ancienTemps =$attractionActuelle['attente'] ?? null;
             }
 
             // 2. Mise à jour de l'attraction en base de données
-            $this->model->updateAttraction($id, $nom, $image, $description, $gag, $caracteristiques, $attente, $taille_minimale, $statut, $univers_id);
+            $this->model->updateAttraction($id,$nom, $image,$description, $gag,$caracteristiques, $attente,$taille_minimale, $statut,$univers_id);
 
-            // 3. Journalisation dans les logs administrateur
-            if (method_exists($this->model, 'logAdminAttenteModification')) {
-                $this->model->logAdminAttenteModification($id, $ancienTemps, $attente, $_SESSION['user_id'] ?? null);
+            // 3. Journalisation centralisée de la modification dans admin_logs
+            if (method_exists($this->model, 'logAdminAction')) {
+                $detailsModif = "Attraction ID #{$id} (« {$nom} ») : temps modifié de " . ($ancienTemps ?? '0') . " min à {$attente} min";
+                $this->model->logAdminAction($_SESSION['user_id'] ?? 1, 'MODIF_ATTENTE', $detailsModif);
             }
 
             // 4. Notification WebSocket en temps réel
@@ -154,9 +156,9 @@ class AttractionController {
             ]);
 
             try {
-                $sp = @fsockopen("127.0.0.1", 8080, $errno, $errstr, 1);
+                $sp = @fsockopen("127.0.0.1", 8080, $errno,$errstr, 1);
                 if ($sp) {
-                    fwrite($sp, $donneesActu);
+                    fwrite($sp,$donneesActu);
                     fclose($sp);
                 }
             } catch (Exception $e) {
@@ -171,10 +173,18 @@ class AttractionController {
     /**
      * Supprime une attraction de la base de données (Admin).
      */
-    public function adminSupprimer($id) {
-        $this->checkAdmin();
+    public function adminSupprimer($id) {$this->checkAdmin();
+        
+        // Récupération du nom pour un log plus explicite
+        $attraction =$this->model->getAttractionById($id);$nomAttraction = $attraction['nom'] ?? "ID #{$id}";
+
         $this->model->deleteAttraction($id);
         
+        // Journalisation de la suppression dans admin_logs
+        if (method_exists($this->model, 'logAdminAction')) {
+            $this->model->logAdminAction($_SESSION['user_id'] ?? 1, 'SUPPRESSION_ATTRACTION', "Suppression de l'attraction : « {$nomAttraction} »");
+        }
+
         header('Location: index.php?action=admin_attractions');
         exit();
     }

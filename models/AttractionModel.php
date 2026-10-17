@@ -103,13 +103,13 @@ class AttractionModel {
     }
 
     /**
-     * Enregistre un journal des modifications des temps d'attente effectuées par un administrateur.
+     * Enregistre n'importe quelle action administrative dans le journal centralisé.
      */
-    public function logAdminAttenteModification($attractionId, $ancienTemps, $nouveauTemps, $adminId) {
+    public function logAdminAction($adminId, $action, $details = null) {
         $stmt = $this->db->prepare("
-            INSERT INTO admin_logs_attentes (attraction_id, ancien_temps, nouveau_temps, admin_id) 
-            VALUES (?, ?, ?, ?)
+            INSERT INTO admin_logs (admin_id, action, details, created_at) 
+            VALUES (?, ?, ?, NOW())
         ");
-        return $stmt->execute([$attractionId, $ancienTemps, $nouveauTemps, $adminId]);
+        return $stmt->execute([$adminId, $action, $details]);
     }
 }
