@@ -6,7 +6,7 @@
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../src/LiveServer.php';
+require_once __DIR__ . '/../config/LiveServer.php';
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
